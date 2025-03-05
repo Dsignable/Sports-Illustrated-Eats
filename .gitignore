@@ -1,6 +1,2 @@
-# Large media files
-wp-content/themes/sports-illustrated/assets/images/Shoot-October 5th/*.mp4
-wp-content/themes/sports-illustrated/assets/images/**/*.mp4
-wp-content/themes/sports-illustrated/assets/videos/**/*.mp4
-wp-content/themes/sports-illustrated/assets/images/**/*.mov
-wp-content/themes/sports-illustrated/assets/videos/**/*.mov
+# Theme assets
+wp-content/themes/sports-illustrated/assets/*
