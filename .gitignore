@@ -1,2 +1,4 @@
-# Theme assets
+# Theme assets and uploads
 wp-content/themes/sports-illustrated/assets/*
+wp-content/uploads/**/*.mp4
+wp-content/uploads/**/*.mov
