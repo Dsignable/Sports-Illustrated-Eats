@@ -1,0 +1,386 @@
+/*
+Theme Name: Twenty Twenty-Five
+Theme URI: https://wordpress.org/themes/twentytwentyfive/
+Author: the WordPress team
+Author URI: https://wordpress.org
+Description: Twenty Twenty-Five emphasizes simplicity and adaptability. It offers flexible design options, supported by a variety of patterns for different page types, such as services and landing pages, making it ideal for building personal blogs, professional portfolios, online magazines, or business websites. Its templates cater to various blog styles, from text-focused to image-heavy layouts. Additionally, it supports international typography and diverse color palettes, ensuring accessibility and customization for users worldwide.
+Requires at least: 6.7
+Tested up to: 6.7
+Requires PHP: 7.2
+Version: 1.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: twentytwentyfive
+Tags: one-column, custom-colors, custom-menu, custom-logo, editor-style, featured-images, full-site-editing, block-patterns, rtl-language-support, sticky-post, threaded-comments, translation-ready, wide-blocks, block-styles, style-variations, accessibility-ready, blog, portfolio, news
+*/
+
+/*
+ * Link styles
+ * https://github.com/WordPress/gutenberg/issues/42319
+ */
+a {
+	text-decoration-thickness: 1px !important;
+	text-underline-offset: .1em;
+}
+
+/* Focus styles */
+:where(.wp-site-blocks *:focus) {
+	outline-width: 2px;
+	outline-style: solid;
+}
+
+/* Increase the bottom margin on submenus, so that the outline is visible. */
+.wp-block-navigation .wp-block-navigation-submenu .wp-block-navigation-item:not(:last-child) {
+	margin-bottom: 3px;
+}
+
+/* Increase the outline offset on the parent menu items, so that the outline does not touch the text. */
+.wp-block-navigation .wp-block-navigation-item .wp-block-navigation-item__content {
+	outline-offset: 4px;
+}
+
+/* Remove outline offset from the submenus, otherwise the outline is visible outside the submenu container. */
+.wp-block-navigation .wp-block-navigation-item ul.wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	outline-offset: 0;
+}
+
+/*
+ * Progressive enhancement to reduce widows and orphans
+ * https://github.com/WordPress/gutenberg/issues/55190
+ */
+h1, h2, h3, h4, h5, h6, blockquote, caption, figcaption, p {
+	text-wrap: pretty;
+}
+
+/*
+ * Change the position of the more block on the front, by making it a block level element.
+ * https://github.com/WordPress/gutenberg/issues/65934
+*/
+.more-link {
+	display: block;
+}
+
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('./fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('./fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Hide default elements */
+.wp-site-blocks > *:not(.hero-section):not(.site-background) {
+    display: none !important;
+}
+
+/* Background styles */
+.site-background {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.hero-background {
+    position: fixed !important;
+    inset: 0;
+    height: 100vh !important;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Header styles */
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 100px;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+/* Add a background gradient overlay for better text visibility */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 70%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Mobile menu overlay */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: right 0.3s ease-in-out;
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu .nav-button {
+    margin: 15px 0;
+}
+
+.hamburger {
+    display: none;
+    position: relative;
+    width: 30px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 2001;
+    margin-left: 20px;
+}
+
+.hamburger span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: white;
+    transition: .25s ease-in-out;
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.hamburger span:nth-child(3) { bottom: 0; }
+
+.hamburger.active span:nth-child(1) {
+    top: 50%;
+    transform: rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    bottom: 50%;
+    transform: rotate(-45deg);
+}
+
+/* Update navigation bar styles */
+.navigation-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    height: 100px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 50px;
+    align-items: center;
+    gap: 33px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0;
+    background: rgba(0,0,0,0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+/* Update button styles */
+.nav-button {
+    margin: auto 0;
+}
+
+.nav-button .wp-block-button__link {
+    min-height: 40px;
+    padding: 9px 30px;
+    border-radius: 100px;
+    background: transparent !important;
+    border: none;
+    color: #FFFFFF !important;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 2px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+}
+
+.nav-button .wp-block-button__link:hover {
+    background: rgba(255,255,255,0.1) !important;
+}
+
+.nav-logo {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 60px;
+    margin: auto 0;
+    flex-shrink: 0;
+}
+
+.wp-block-site-logo.nav-logo img {
+    width: 60px;
+    height: auto;
+}
+
+/* Mobile styles */
+@media (max-width: 991px) {
+    .navigation-bar {
+        padding: 0 20px;
+        justify-content: space-between;
+    }
+
+    .nav-button:not(.mobile-logo) {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .mobile-menu .nav-button {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .mobile-menu .nav-button .wp-block-button__link {
+        width: auto;
+        padding: 15px 30px;
+        font-size: 24px;
+    }
+
+    .nav-logo {
+        order: -1; /* Move logo to the left */
+    }
+}
+
+/* Enable smooth scrolling on the html element */
+html {
+    scroll-behavior: smooth;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+}
+
+/* Remove body padding since we're using snap scrolling */
+body {
+    margin: 0;
+    padding: 0 !important;
+    min-height: 100vh;
+}
+
+/* Menu Items Section */
+.menu-items {
+    position: relative;
+    width: 100%;
+    min-height: 300vh; /* Space for all three cards */
+    padding-top: 100vh; /* Start after hero */
+    z-index: 2;
+}
+
+.menu-card {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.menu-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.menu-card-content {
+    position: relative;
+    max-width: 800px;
+    width: 90%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.menu-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-image {
+    transform: scale(1.05);
+}
+
+.menu-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    font-family: 'Solano Gothic MVB', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    line-height: 1.2;
+    z-index: 1;
+}
+
+/* Add a dark overlay on the images */
+.menu-card-content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease;
+}
+
+.menu-card:hover .menu-card-content::after {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .menu-title {
+        font-size: 3rem;
+    }
+    
+    .menu-card-content {
+        width: 95%;
+    }
+}

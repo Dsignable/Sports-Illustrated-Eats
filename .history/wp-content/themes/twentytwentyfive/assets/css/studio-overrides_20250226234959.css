@@ -1,0 +1,50 @@
+/* WordPress Studio Button Overrides */
+:root {
+    --wp--preset--color--background: transparent !important;
+}
+
+.wp-block-button__link,
+.wp-element-button,
+a.wp-element-button,
+.wp-block-button .wp-block-button__link {
+    all: unset;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    padding: 9px 30px !important;
+    min-width: 150px !important;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    letter-spacing: 2px !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    border-radius: 100px !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+}
+
+/* Remove any WordPress added styles */
+.wp-element-button[class*="has-"],
+.wp-block-button__link[class*="has-"] {
+    background: transparent !important;
+    color: #FFFFFF !important;
+}
+
+/* Hover state */
+.wp-block-button__link:hover,
+.wp-element-button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Navigation bar specific styles */
+.navigation-bar {
+    background: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Force remove any theme added backgrounds */
+[class*="wp-block"] {
+    background: none !important;
+} 

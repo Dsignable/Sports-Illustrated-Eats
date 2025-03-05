@@ -1,0 +1,146 @@
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('../../fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('../../fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Hide default header elements */
+.wp-site-blocks > header:not(.hero-section) {
+    display: none !important;
+}
+
+/* Ensure our header is always on top */
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    min-height: 117px; /* Changed to nav height since it's now fixed */
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Add a background gradient overlay for better text visibility */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 70%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-section .wp-block-cover {
+    margin: 0;
+    padding: 0;
+    min-height: 117px !important; /* Match header height */
+}
+
+.hero-background {
+    position: fixed !important; /* Make background fixed */
+    inset: 0;
+    height: 100vh !important; /* Full viewport height */
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Add padding to body to account for fixed header */
+body {
+    padding-top: 117px !important;
+}
+
+/* Custom styles for Sports Illustrated */
+.navigation-bar {
+    background-color: red !important;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    height: 100px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 50px;
+    align-items: center;
+}
+
+.nav-button {
+    margin: auto 0;
+}
+
+.nav-button .wp-block-button__link {
+    min-height: 40px;
+    width: 150px;
+    padding: 9px 53px;
+    border-radius: 100px;
+    background: transparent !important;
+    border: none;
+    color: inherit !important;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-button .wp-block-button__link:hover {
+    background: rgba(255,255,255,0.1) !important;
+}
+
+.nav-button:nth-child(2) .wp-block-button__link { padding: 9px 34px; }
+.nav-button:nth-child(3) .wp-block-button__link { padding: 9px 19px 9px 18px; }
+.nav-button:nth-child(5) .wp-block-button__link {
+    padding: 9px 12px 9px 13px;
+    border-radius: 150px;
+}
+.nav-button:nth-child(6) .wp-block-button__link { padding: 9px 4px; }
+.nav-button:nth-child(7) .wp-block-button__link { padding: 9px 29px 9px 28px; }
+
+.nav-logo {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 80px;
+    align-self: stretch;
+    margin: auto 0;
+    flex-shrink: 0;
+}
+
+.wp-block-site-logo.nav-logo img {
+    width: 80px;
+    height: auto;
+}
+
+@media screen and (max-width: 991px) {
+    .navigation-bar {
+        background-color: blue !important;
+        padding: 0 20px;
+        justify-content: space-between;
+    }
+
+    .nav-button .wp-block-button__link {
+        padding: 9px 20px;
+        white-space: initial;
+    }
+
+    .nav-button:nth-child(2) .wp-block-button__link,
+    .nav-button:nth-child(7) .wp-block-button__link {
+        padding: 9px 20px;
+    }
+} 
