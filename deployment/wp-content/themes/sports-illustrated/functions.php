@@ -1166,6 +1166,41 @@ function si_header_navigation_customizer($wp_customize) {
         'section'  => 'si_header_navigation',
         'type'     => 'checkbox',
     ));
+    
+    // Menu Dropdown URLs
+    $wp_customize->add_setting('si_menu_dropdown_heading', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    
+    $wp_customize->add_control(new WP_Customize_Control($wp_customize, 'si_menu_dropdown_heading', array(
+        'label'       => __('Menu Dropdown URLs', 'sports-illustrated'),
+        'description' => __('Configure the URLs for each menu dropdown item.', 'sports-illustrated'),
+        'section'     => 'si_header_navigation',
+        'type'        => 'hidden',
+    )));
+    
+    // Menu dropdown items
+    $menu_items = array(
+        'full'   => __('Full Menu', 'sports-illustrated'),
+        'drink'  => __('Drink Menu', 'sports-illustrated'),
+        'brunch' => __('Brunch Menu', 'sports-illustrated'),
+        'happy'  => __('Happy Hour', 'sports-illustrated'),
+        'today'  => __('Today\'s Menu', 'sports-illustrated')
+    );
+    
+    foreach ($menu_items as $key => $label) {
+        $wp_customize->add_setting('si_menu_dropdown_url_' . $key, array(
+            'default'           => home_url('/menu/?menu=' . $key),
+            'sanitize_callback' => 'esc_url_raw',
+        ));
+        
+        $wp_customize->add_control('si_menu_dropdown_url_' . $key, array(
+            'label'    => sprintf(__('%s URL', 'sports-illustrated'), $label),
+            'section'  => 'si_header_navigation',
+            'type'     => 'url',
+        ));
+    }
 }
 add_action('customize_register', 'si_header_navigation_customizer');
 

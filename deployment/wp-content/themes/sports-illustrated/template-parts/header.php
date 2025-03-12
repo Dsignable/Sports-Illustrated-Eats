@@ -32,11 +32,11 @@
                                 <span class="dropdown-arrow">▼</span>
                             </a>
                             <div class="menu-dropdown">
-                                <a href="<?php echo esc_url(add_query_arg('menu', 'full', $menu_url)); ?>" class="dropdown-item">FULL MENU</a>
-                                <a href="<?php echo esc_url(add_query_arg('menu', 'drink', $menu_url)); ?>" class="dropdown-item">DRINK MENU</a>
-                                <a href="<?php echo esc_url(add_query_arg('menu', 'brunch', $menu_url)); ?>" class="dropdown-item">BRUNCH MENU</a>
-                                <a href="<?php echo esc_url(add_query_arg('menu', 'happy', $menu_url)); ?>" class="dropdown-item">HAPPY HOUR</a>
-                                <a href="<?php echo esc_url(add_query_arg('menu', 'today', $menu_url)); ?>" class="dropdown-item">TODAY'S MENU</a>
+                                <a href="<?php echo esc_url(get_theme_mod('si_menu_dropdown_url_full', add_query_arg('menu', 'full', $menu_url))); ?>" class="dropdown-item">FULL MENU</a>
+                                <a href="<?php echo esc_url(get_theme_mod('si_menu_dropdown_url_drink', add_query_arg('menu', 'drink', $menu_url))); ?>" class="dropdown-item">DRINK MENU</a>
+                                <a href="<?php echo esc_url(get_theme_mod('si_menu_dropdown_url_brunch', add_query_arg('menu', 'brunch', $menu_url))); ?>" class="dropdown-item">BRUNCH MENU</a>
+                                <a href="<?php echo esc_url(get_theme_mod('si_menu_dropdown_url_happy', add_query_arg('menu', 'happy', $menu_url))); ?>" class="dropdown-item">HAPPY HOUR</a>
+                                <a href="<?php echo esc_url(get_theme_mod('si_menu_dropdown_url_today', add_query_arg('menu', 'today', $menu_url))); ?>" class="dropdown-item">TODAY'S MENU</a>
                             </div>
                         </div>
                     <?php else : ?>
@@ -89,6 +89,15 @@
 
         if ($menu_visible && $menu_text) {
             echo '<a href="' . esc_url($menu_url) . '">' . esc_html($menu_text) . '</a>';
+            
+            // Add menu dropdown items for mobile
+            if ($i == 1 && $menu_text == 'MENU' && get_theme_mod('si_enable_menu_dropdown', true)) {
+                echo '<a href="' . esc_url(get_theme_mod('si_menu_dropdown_url_full', add_query_arg('menu', 'full', $menu_url))) . '" class="mobile-submenu-item">— FULL MENU</a>';
+                echo '<a href="' . esc_url(get_theme_mod('si_menu_dropdown_url_drink', add_query_arg('menu', 'drink', $menu_url))) . '" class="mobile-submenu-item">— DRINK MENU</a>';
+                echo '<a href="' . esc_url(get_theme_mod('si_menu_dropdown_url_brunch', add_query_arg('menu', 'brunch', $menu_url))) . '" class="mobile-submenu-item">— BRUNCH MENU</a>';
+                echo '<a href="' . esc_url(get_theme_mod('si_menu_dropdown_url_happy', add_query_arg('menu', 'happy', $menu_url))) . '" class="mobile-submenu-item">— HAPPY HOUR</a>';
+                echo '<a href="' . esc_url(get_theme_mod('si_menu_dropdown_url_today', add_query_arg('menu', 'today', $menu_url))) . '" class="mobile-submenu-item">— TODAY\'S MENU</a>';
+            }
         }
     }
 
