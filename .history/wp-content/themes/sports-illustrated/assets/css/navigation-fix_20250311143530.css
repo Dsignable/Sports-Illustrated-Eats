@@ -1,0 +1,7 @@
+.desktop-menu a {
+    display: inline-block !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    min-width: fit-content !important;
+    min-width: -webkit-fill-available !important;
+} 
