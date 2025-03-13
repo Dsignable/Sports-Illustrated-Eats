@@ -1,0 +1,127 @@
+/**
+ * Responsive fixes for Sports Illustrated theme
+ * Specifically targeting the sports-highlights section on mobile and tablet
+ */
+
+/* Menu font size customizer variables will be added inline by WordPress */
+
+/* Tablet fixes for sports-highlights */
+@media (max-width: 991px) {
+    /* Menu customizations */
+    .mobile-menu a {
+        font-size: var(--tablet-menu-font-size, 18px) !important;
+    }
+    
+    .dropdown-item {
+        font-size: var(--tablet-dropdown-font-size, 16px) !important;
+    }
+    
+    /* Sports highlights fixes */
+    .sports-highlights {
+        min-height: auto !important;
+        height: auto !important;
+        padding: 60px 20px !important;
+        overflow: visible !important;
+        max-height: none !important;
+    }
+
+    .sports-highlights .content-wrapper {
+        padding: 0 !important;
+    }
+
+    .sports-highlights .highlight-content {
+        gap: 40px !important;
+        padding: 20px !important;
+    }
+
+    .sports-highlights .top-section,
+    .sports-highlights .bottom-section {
+        flex-direction: column !important;
+        gap: 30px !important;
+        text-align: center !important;
+    }
+
+    .sports-highlights .text-content {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: center !important;
+    }
+
+    .sports-highlights .top-section .text-content,
+    .sports-highlights .bottom-section .text-content {
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    .sports-highlights .main-heading,
+    .sports-highlights .secondary-heading {
+        font-size: 36px !important;
+        letter-spacing: 3px !important;
+        margin-bottom: 20px !important;
+        width: 100% !important;
+        text-align: center !important;
+        word-wrap: break-word !important;
+    }
+
+    .sports-highlights .description,
+    .sports-highlights .secondary-description {
+        font-size: 16px !important;
+        letter-spacing: 1.2px !important;
+        padding: 0 15px !important;
+        margin: 10px 0 !important;
+        width: 100% !important;
+        text-align: center !important;
+        word-wrap: break-word !important;
+        line-height: 1.6 !important;
+    }
+
+    .sports-highlights .left-image,
+    .sports-highlights .right-image {
+        display: none !important;
+    }
+}
+
+/* Mobile fixes for sports-highlights */
+@media (max-width: 480px) {
+    /* Menu customizations */
+    .mobile-menu a {
+        font-size: var(--mobile-menu-font-size, 16px) !important;
+    }
+    
+    .dropdown-item {
+        font-size: var(--mobile-dropdown-font-size, 14px) !important;
+    }
+    
+    /* Sports highlights fixes */
+    .sports-highlights {
+        padding: 40px 10px !important;
+        min-height: auto !important;
+        height: auto !important;
+    }
+
+    .sports-highlights .highlight-content {
+        gap: 30px !important;
+        padding: 10px !important;
+    }
+
+    .sports-highlights .main-heading,
+    .sports-highlights .secondary-heading {
+        font-size: 28px !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .sports-highlights .description,
+    .sports-highlights .secondary-description {
+        font-size: 14px !important;
+        letter-spacing: 1px !important;
+        padding: 0 10px !important;
+        margin: 5px 0 !important;
+    }
+
+    .sports-highlights .text-content {
+        padding: 0 10px !important;
+    }
+} 

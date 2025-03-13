@@ -503,45 +503,6 @@ function si_home_page_customizer_settings($wp_customize) {
         'type'        => 'hidden',
     )));
 
-    // Experience Header Text
-    $wp_customize->add_setting('si_experience_header_text', array(
-        'default'           => __('SPORTS ILLUSTRATED CLUBHOUSE', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_experience_header_text', array(
-        'label'       => __('Experience Header Text', 'sports-illustrated'),
-        'description' => __('Enter the header text for the experience section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'text',
-    ));
-
-    // Experience Content Title
-    $wp_customize->add_setting('si_experience_content_title', array(
-        'default'           => __('A DINING EXPERIENCE LIKE NO OTHER', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_experience_content_title', array(
-        'label'       => __('Experience Content Title', 'sports-illustrated'),
-        'description' => __('Enter the title for the experience content section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'text',
-    ));
-
-    // Experience Description
-    $wp_customize->add_setting('si_experience_description', array(
-        'default'           => __('At Sports Illustrated Clubhouse, we bring the excitement of the game to your table with a menu crafted to satisfy every craving. Our signature dishes are inspired by the energy and spirit of sports, blending bold flavors with fresh, locally sourced ingredients. Whether you\'re catching the big game with friends or celebrating a special occasion, our menu features a lineup of winning options that include sizzling burgers, hand-crafted pizzas, zesty wings, and fresh, crisp salads. Every dish is designed to make your taste buds cheer, from classic comfort foods to innovative culinary creations.', 'sports-illustrated'),
-        'sanitize_callback' => 'wp_kses_post',
-    ));
-
-    $wp_customize->add_control('si_experience_description', array(
-        'label'       => __('Experience Description', 'sports-illustrated'),
-        'description' => __('Enter the description text for the experience section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'textarea',
-    ));
-
     // Experience Top Photo
     $wp_customize->add_setting('si_experience_top_photo', array(
             'default'           => '',
@@ -1829,36 +1790,8 @@ function si_menu_page_customizer($wp_customize) {
     ));
 
         $wp_customize->add_control('si_menu_' . $menu_id . '_size_multiplier', array(
-            'label'       => $menu_name . ' Size Multiplier (Desktop)',
-            'description' => sprintf(__('Increase the size of the %s image to make it more legible on desktop.', 'sports-illustrated'), $menu_name),
-            'section'     => 'si_menu_page_section',
-            'type'        => 'select',
-            'choices'     => $size_options,
-        ));
-        
-        // Tablet Size Multiplier
-        $wp_customize->add_setting('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
-            'default'           => '1.5',
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-        $wp_customize->add_control('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
-            'label'       => $menu_name . ' Size Multiplier (Tablet)',
-            'description' => sprintf(__('Increase the size of the %s image to make it more legible on tablets.', 'sports-illustrated'), $menu_name),
-            'section'     => 'si_menu_page_section',
-            'type'        => 'select',
-            'choices'     => $size_options,
-        ));
-        
-        // Mobile Size Multiplier
-        $wp_customize->add_setting('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
-            'default'           => '2',
-            'sanitize_callback' => 'sanitize_text_field',
-        ));
-
-        $wp_customize->add_control('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
-            'label'       => $menu_name . ' Size Multiplier (Mobile)',
-            'description' => sprintf(__('Increase the size of the %s image to make it more legible on mobile devices.', 'sports-illustrated'), $menu_name),
+            'label'       => $menu_name . ' Size Multiplier',
+            'description' => sprintf(__('Increase the size of the %s image to make it more legible.', 'sports-illustrated'), $menu_name),
             'section'     => 'si_menu_page_section',
             'type'        => 'select',
             'choices'     => $size_options,
@@ -3407,80 +3340,91 @@ function si_fix_menu_urls($redirect_url, $requested_url) {
 add_filter('redirect_canonical', 'si_fix_menu_urls', 10, 2);
 
 /**
- * Add monthly events customizer settings
+ * Add responsive menu customizer settings
  */
-function si_monthly_events_customizer($wp_customize) {
-    // Add Monthly Events Section
-    $wp_customize->add_section('si_monthly_events_section', array(
-        'title'    => __('Monthly Events Settings', 'sports-illustrated'),
-        'description' => __('Configure content for the monthly events section on the homepage.', 'sports-illustrated'),
-        'priority' => 35,
+function si_responsive_menu_customizer($wp_customize) {
+    // Responsive Menu Section
+    $wp_customize->add_section('si_responsive_menu_section', array(
+        'title'    => __('Responsive Menu Settings', 'sports-illustrated'),
+        'priority' => 130,
     ));
-
-    // Monthly Events Title
-    $wp_customize->add_setting('si_monthly_events_title', array(
-        'default'           => __('SI CLUBHOUSE MONTHLY EVENTS', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
+    
+    // Tablet Menu Font Size
+    $wp_customize->add_setting('si_tablet_menu_font_size', array(
+        'default'           => '18',
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
     ));
-
-    $wp_customize->add_control('si_monthly_events_title', array(
-        'label'    => __('Section Title', 'sports-illustrated'),
-        'section'  => 'si_monthly_events_section',
-        'type'     => 'text',
+    
+    $wp_customize->add_control('si_tablet_menu_font_size', array(
+        'label'       => __('Tablet Menu Font Size (px)', 'sports-illustrated'),
+        'description' => __('Font size for menu items on tablet devices (max-width: 991px)', 'sports-illustrated'),
+        'section'     => 'si_responsive_menu_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 12,
+            'max'  => 30,
+            'step' => 1,
+        ),
     ));
-
-    // Add settings for up to 8 events
-    for ($i = 1; $i <= 8; $i++) {
-        // Event Image
-        $wp_customize->add_setting("si_event_image_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'absint',
-        ));
-
-        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, "si_event_image_$i", array(
-            'label'       => sprintf(__('Event %d Image', 'sports-illustrated'), $i),
-            'description' => sprintf(__('Upload an image for event %d.', 'sports-illustrated'), $i),
-            'section'     => 'si_monthly_events_section',
-            'mime_type'   => 'image',
-        )));
-
-        // Event Title
-        $wp_customize->add_setting("si_event_title_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-        ));
-
-        $wp_customize->add_control("si_event_title_$i", array(
-            'label'    => sprintf(__('Event %d Title', 'sports-illustrated'), $i),
-            'section'  => 'si_monthly_events_section',
-            'type'     => 'text',
-        ));
-
-        // Event Date
-        $wp_customize->add_setting("si_event_date_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-        ));
-
-        $wp_customize->add_control("si_event_date_$i", array(
-            'label'    => sprintf(__('Event %d Date', 'sports-illustrated'), $i),
-            'section'  => 'si_monthly_events_section',
-            'type'     => 'text',
-        ));
-
-        // Event Link
-        $wp_customize->add_setting("si_event_link_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'esc_url_raw',
-        ));
-
-        $wp_customize->add_control("si_event_link_$i", array(
-            'label'    => sprintf(__('Event %d Link', 'sports-illustrated'), $i),
-            'section'  => 'si_monthly_events_section',
-            'type'     => 'url',
-        ));
-    }
+    
+    // Mobile Menu Font Size
+    $wp_customize->add_setting('si_mobile_menu_font_size', array(
+        'default'           => '16',
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ));
+    
+    $wp_customize->add_control('si_mobile_menu_font_size', array(
+        'label'       => __('Mobile Menu Font Size (px)', 'sports-illustrated'),
+        'description' => __('Font size for menu items on mobile devices (max-width: 480px)', 'sports-illustrated'),
+        'section'     => 'si_responsive_menu_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 12,
+            'max'  => 28,
+            'step' => 1,
+        ),
+    ));
+    
+    // Tablet Dropdown Menu Font Size
+    $wp_customize->add_setting('si_tablet_dropdown_font_size', array(
+        'default'           => '16',
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ));
+    
+    $wp_customize->add_control('si_tablet_dropdown_font_size', array(
+        'label'       => __('Tablet Dropdown Font Size (px)', 'sports-illustrated'),
+        'description' => __('Font size for dropdown menu items on tablet devices', 'sports-illustrated'),
+        'section'     => 'si_responsive_menu_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 12,
+            'max'  => 24,
+            'step' => 1,
+        ),
+    ));
+    
+    // Mobile Dropdown Menu Font Size
+    $wp_customize->add_setting('si_mobile_dropdown_font_size', array(
+        'default'           => '14',
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ));
+    
+    $wp_customize->add_control('si_mobile_dropdown_font_size', array(
+        'label'       => __('Mobile Dropdown Font Size (px)', 'sports-illustrated'),
+        'description' => __('Font size for dropdown menu items on mobile devices', 'sports-illustrated'),
+        'section'     => 'si_responsive_menu_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 10,
+            'max'  => 22,
+            'step' => 1,
+        ),
+    ));
 }
-add_action('customize_register', 'si_monthly_events_customizer');
+add_action('customize_register', 'si_responsive_menu_customizer');
 
 // ... existing code ...

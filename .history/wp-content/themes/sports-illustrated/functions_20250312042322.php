@@ -503,45 +503,6 @@ function si_home_page_customizer_settings($wp_customize) {
         'type'        => 'hidden',
     )));
 
-    // Experience Header Text
-    $wp_customize->add_setting('si_experience_header_text', array(
-        'default'           => __('SPORTS ILLUSTRATED CLUBHOUSE', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_experience_header_text', array(
-        'label'       => __('Experience Header Text', 'sports-illustrated'),
-        'description' => __('Enter the header text for the experience section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'text',
-    ));
-
-    // Experience Content Title
-    $wp_customize->add_setting('si_experience_content_title', array(
-        'default'           => __('A DINING EXPERIENCE LIKE NO OTHER', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_experience_content_title', array(
-        'label'       => __('Experience Content Title', 'sports-illustrated'),
-        'description' => __('Enter the title for the experience content section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'text',
-    ));
-
-    // Experience Description
-    $wp_customize->add_setting('si_experience_description', array(
-        'default'           => __('At Sports Illustrated Clubhouse, we bring the excitement of the game to your table with a menu crafted to satisfy every craving. Our signature dishes are inspired by the energy and spirit of sports, blending bold flavors with fresh, locally sourced ingredients. Whether you\'re catching the big game with friends or celebrating a special occasion, our menu features a lineup of winning options that include sizzling burgers, hand-crafted pizzas, zesty wings, and fresh, crisp salads. Every dish is designed to make your taste buds cheer, from classic comfort foods to innovative culinary creations.', 'sports-illustrated'),
-        'sanitize_callback' => 'wp_kses_post',
-    ));
-
-    $wp_customize->add_control('si_experience_description', array(
-        'label'       => __('Experience Description', 'sports-illustrated'),
-        'description' => __('Enter the description text for the experience section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'textarea',
-    ));
-
     // Experience Top Photo
     $wp_customize->add_setting('si_experience_top_photo', array(
             'default'           => '',
@@ -1238,7 +1199,7 @@ function si_header_navigation_customizer($wp_customize) {
     
     foreach ($menu_items as $key => $label) {
         $wp_customize->add_setting('si_menu_dropdown_url_' . $key, array(
-            'default'           => home_url('/menu/?menu=' . $key),
+            'default'           => home_url('/menu/' . $key . '/'),
             'sanitize_callback' => 'esc_url_raw',
             'transport'         => 'postMessage',
         ));
@@ -1825,8 +1786,8 @@ function si_menu_page_customizer($wp_customize) {
         // Menu Size Multiplier (individual for each menu)
         $wp_customize->add_setting('si_menu_' . $menu_id . '_size_multiplier', array(
             'default'           => '1',
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
 
         $wp_customize->add_control('si_menu_' . $menu_id . '_size_multiplier', array(
             'label'       => $menu_name . ' Size Multiplier (Desktop)',
@@ -1839,8 +1800,8 @@ function si_menu_page_customizer($wp_customize) {
         // Tablet Size Multiplier
         $wp_customize->add_setting('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
             'default'           => '1.5',
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
 
         $wp_customize->add_control('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
             'label'       => $menu_name . ' Size Multiplier (Tablet)',
@@ -3388,6 +3349,13 @@ function si_add_menu_rewrite_rules() {
         'top'
     );
     
+    // Add rewrite rule for menu types in URL path (e.g., /menu/drink/)
+    add_rewrite_rule(
+        '^menu/([^/]+)/?$',
+        'index.php?pagename=menu&menu=$matches[1]',
+        'top'
+    );
+    
     // Ensure menu query parameter is passed through
     global $wp;
     $wp->add_query_var('menu');
@@ -3399,88 +3367,12 @@ add_action('init', 'si_add_menu_rewrite_rules');
  */
 function si_fix_menu_urls($redirect_url, $requested_url) {
     // If the URL contains /menu/ and a menu parameter, don't redirect
-    if (strpos($requested_url, '/menu/') !== false && strpos($requested_url, 'menu=') !== false) {
+    if (strpos($requested_url, '/menu/') !== false && 
+        (strpos($requested_url, 'menu=') !== false || preg_match('#/menu/([^/]+)/?$#', $requested_url))) {
         return false; // Prevent redirection
     }
     return $redirect_url;
 }
 add_filter('redirect_canonical', 'si_fix_menu_urls', 10, 2);
-
-/**
- * Add monthly events customizer settings
- */
-function si_monthly_events_customizer($wp_customize) {
-    // Add Monthly Events Section
-    $wp_customize->add_section('si_monthly_events_section', array(
-        'title'    => __('Monthly Events Settings', 'sports-illustrated'),
-        'description' => __('Configure content for the monthly events section on the homepage.', 'sports-illustrated'),
-        'priority' => 35,
-    ));
-
-    // Monthly Events Title
-    $wp_customize->add_setting('si_monthly_events_title', array(
-        'default'           => __('SI CLUBHOUSE MONTHLY EVENTS', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_monthly_events_title', array(
-        'label'    => __('Section Title', 'sports-illustrated'),
-        'section'  => 'si_monthly_events_section',
-        'type'     => 'text',
-    ));
-
-    // Add settings for up to 8 events
-    for ($i = 1; $i <= 8; $i++) {
-        // Event Image
-        $wp_customize->add_setting("si_event_image_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'absint',
-        ));
-
-        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, "si_event_image_$i", array(
-            'label'       => sprintf(__('Event %d Image', 'sports-illustrated'), $i),
-            'description' => sprintf(__('Upload an image for event %d.', 'sports-illustrated'), $i),
-            'section'     => 'si_monthly_events_section',
-            'mime_type'   => 'image',
-        )));
-
-        // Event Title
-        $wp_customize->add_setting("si_event_title_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-        ));
-
-        $wp_customize->add_control("si_event_title_$i", array(
-            'label'    => sprintf(__('Event %d Title', 'sports-illustrated'), $i),
-            'section'  => 'si_monthly_events_section',
-            'type'     => 'text',
-        ));
-
-        // Event Date
-        $wp_customize->add_setting("si_event_date_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-        ));
-
-        $wp_customize->add_control("si_event_date_$i", array(
-            'label'    => sprintf(__('Event %d Date', 'sports-illustrated'), $i),
-            'section'  => 'si_monthly_events_section',
-            'type'     => 'text',
-        ));
-
-        // Event Link
-        $wp_customize->add_setting("si_event_link_$i", array(
-            'default'           => '',
-            'sanitize_callback' => 'esc_url_raw',
-        ));
-
-        $wp_customize->add_control("si_event_link_$i", array(
-            'label'    => sprintf(__('Event %d Link', 'sports-illustrated'), $i),
-            'section'  => 'si_monthly_events_section',
-            'type'     => 'url',
-        ));
-    }
-}
-add_action('customize_register', 'si_monthly_events_customizer');
 
 // ... existing code ...

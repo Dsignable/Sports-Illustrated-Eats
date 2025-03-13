@@ -503,45 +503,6 @@ function si_home_page_customizer_settings($wp_customize) {
         'type'        => 'hidden',
     )));
 
-    // Experience Header Text
-    $wp_customize->add_setting('si_experience_header_text', array(
-        'default'           => __('SPORTS ILLUSTRATED CLUBHOUSE', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_experience_header_text', array(
-        'label'       => __('Experience Header Text', 'sports-illustrated'),
-        'description' => __('Enter the header text for the experience section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'text',
-    ));
-
-    // Experience Content Title
-    $wp_customize->add_setting('si_experience_content_title', array(
-        'default'           => __('A DINING EXPERIENCE LIKE NO OTHER', 'sports-illustrated'),
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-
-    $wp_customize->add_control('si_experience_content_title', array(
-        'label'       => __('Experience Content Title', 'sports-illustrated'),
-        'description' => __('Enter the title for the experience content section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'text',
-    ));
-
-    // Experience Description
-    $wp_customize->add_setting('si_experience_description', array(
-        'default'           => __('At Sports Illustrated Clubhouse, we bring the excitement of the game to your table with a menu crafted to satisfy every craving. Our signature dishes are inspired by the energy and spirit of sports, blending bold flavors with fresh, locally sourced ingredients. Whether you\'re catching the big game with friends or celebrating a special occasion, our menu features a lineup of winning options that include sizzling burgers, hand-crafted pizzas, zesty wings, and fresh, crisp salads. Every dish is designed to make your taste buds cheer, from classic comfort foods to innovative culinary creations.', 'sports-illustrated'),
-        'sanitize_callback' => 'wp_kses_post',
-    ));
-
-    $wp_customize->add_control('si_experience_description', array(
-        'label'       => __('Experience Description', 'sports-illustrated'),
-        'description' => __('Enter the description text for the experience section.', 'sports-illustrated'),
-        'section'     => 'si_home_page_section',
-        'type'        => 'textarea',
-    ));
-
     // Experience Top Photo
     $wp_customize->add_setting('si_experience_top_photo', array(
             'default'           => '',

@@ -10,8 +10,24 @@ get_header();
 // Get background style
 $bg_style = si_get_background_style('menu');
 
-// Get the menu type from URL parameter
-$active_menu = isset($_GET['menu']) ? sanitize_key($_GET['menu']) : 'full';
+// Get the menu type from URL parameter or URL path
+$active_menu = 'full'; // Default
+
+// Check for menu parameter in query string
+if (isset($_GET['menu'])) {
+    $active_menu = sanitize_key($_GET['menu']);
+}
+
+// Check for menu type in URL path
+$request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+if (preg_match('#/menu/([^/]+)/?$#', $request_uri, $matches)) {
+    $path_menu = sanitize_key($matches[1]);
+    if (!empty($path_menu)) {
+        $active_menu = $path_menu;
+    }
+}
+
+// Validate menu type
 $valid_menus = array('full', 'happy', 'drink', 'brunch', 'today');
 if (!in_array($active_menu, $valid_menus)) {
     $active_menu = 'full';
@@ -19,13 +35,6 @@ if (!in_array($active_menu, $valid_menus)) {
 
 // Get today's day for "today's menu"
 $today = strtolower(date('l'));
-
-// Get the menu page ID for links
-$menu_page_id = get_the_ID();
-$use_page_id = false;
-if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustratedeats.com') !== false) {
-    $use_page_id = true;
-}
 
 // Add custom CSS for menu size
 ?>
@@ -109,27 +118,11 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
 <main id="primary" class="site-main menu-page" <?php echo $bg_style; ?>>
     <nav class="menu-container">
         <div class="menu-buttons">
-            <?php
-            // Generate menu button URLs
-            $menu_types = array(
-                'full' => 'FULL MENU',
-                'drink' => 'DRINK MENU',
-                'brunch' => 'BRUNCH MENU',
-                'happy' => 'HAPPY HOUR',
-                'today' => 'TODAY\'S MENU'
-            );
-            
-            foreach ($menu_types as $menu_type => $menu_label) :
-                $button_url = $use_page_id ? 
-                    add_query_arg(array('page_id' => $menu_page_id, 'menu' => $menu_type), home_url()) : 
-                    add_query_arg('menu', $menu_type, get_permalink());
-            ?>
-                <button class="menu-btn <?php echo $menu_type; ?>-menu <?php echo $active_menu === $menu_type ? 'active' : ''; ?>" 
-                        data-menu="<?php echo esc_attr($menu_type); ?>" 
-                        data-url="<?php echo esc_url($button_url); ?>">
-                    <?php echo esc_html($menu_label); ?>
-                </button>
-            <?php endforeach; ?>
+            <button class="menu-btn full-menu <?php echo $active_menu === 'full' ? 'active' : ''; ?>" data-menu="full">FULL MENU</button>
+            <button class="menu-btn drink-menu <?php echo $active_menu === 'drink' ? 'active' : ''; ?>" data-menu="drink">DRINK MENU</button>
+            <button class="menu-btn brunch-menu <?php echo $active_menu === 'brunch' ? 'active' : ''; ?>" data-menu="brunch">BRUNCH MENU</button>
+            <button class="menu-btn happy-hour <?php echo $active_menu === 'happy' ? 'active' : ''; ?>" data-menu="happy">HAPPY HOUR</button>
+            <button class="menu-btn todays-menu <?php echo $active_menu === 'today' ? 'active' : ''; ?>" data-menu="today">TODAY'S MENU</button>
         </div>
         <section class="image-section">
             <div class="image-wrapper">
@@ -170,24 +163,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                 </div>
 
                 <?php
-                // Brunch Menu
-                $brunch_menu_image = si_get_image_url('si_menu_brunch_image', get_theme_file_uri('assets/images/menus/brunch-menu.jpg'));
-                $brunch_menu_pdf = wp_get_attachment_url(get_theme_mod('si_restaurant_menu_brunch_pdf'));
-                ?>
-                <div class="menu-image-container <?php echo $active_menu === 'brunch' ? 'active' : ''; ?>" data-menu="brunch" <?php echo $active_menu !== 'brunch' ? 'style="display: none;"' : ''; ?>>
-                    <img src="<?php echo esc_url($brunch_menu_image); ?>" 
-                         class="menu-image" 
-                         alt="Brunch Menu">
-                    <?php if ($brunch_menu_pdf) : ?>
-                    <div class="menu-pdf-download">
-                        <a href="<?php echo esc_url($brunch_menu_pdf); ?>" target="_blank" class="download-btn">
-                            <span class="dashicons dashicons-pdf"></span> Download PDF
-                        </a>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
-                <?php
                 // Happy Hour Menu
                 $happy_hour_image = si_get_image_url('si_menu_happy_image', get_theme_file_uri('assets/images/menus/happy-hour.jpg'));
                 $happy_hour_pdf = wp_get_attachment_url(get_theme_mod('si_restaurant_menu_happy_pdf'));
@@ -199,6 +174,24 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                     <?php if ($happy_hour_pdf) : ?>
                     <div class="menu-pdf-download">
                         <a href="<?php echo esc_url($happy_hour_pdf); ?>" target="_blank" class="download-btn">
+                            <span class="dashicons dashicons-pdf"></span> Download PDF
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <?php
+                // Brunch Menu
+                $brunch_menu_image = si_get_image_url('si_menu_brunch_image', get_theme_file_uri('assets/images/menus/brunch-menu.jpg'));
+                $brunch_menu_pdf = wp_get_attachment_url(get_theme_mod('si_restaurant_menu_brunch_pdf'));
+                ?>
+                <div class="menu-image-container <?php echo $active_menu === 'brunch' ? 'active' : ''; ?>" data-menu="brunch" <?php echo $active_menu !== 'brunch' ? 'style="display: none;"' : ''; ?>>
+                    <img src="<?php echo esc_url($brunch_menu_image); ?>" 
+                         class="menu-image" 
+                         alt="Brunch Menu">
+                    <?php if ($brunch_menu_pdf) : ?>
+                    <div class="menu-pdf-download">
+                        <a href="<?php echo esc_url($brunch_menu_pdf); ?>" target="_blank" class="download-btn">
                             <span class="dashicons dashicons-pdf"></span> Download PDF
                         </a>
                     </div>

@@ -1193,12 +1193,14 @@ function si_header_navigation_customizer($wp_customize) {
         $wp_customize->add_setting('si_menu_dropdown_url_' . $key, array(
             'default'           => home_url('/menu/?menu=' . $key),
             'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'postMessage',
         ));
         
         $wp_customize->add_control('si_menu_dropdown_url_' . $key, array(
-            'label'    => sprintf(__('%s URL', 'sports-illustrated'), $label),
-            'section'  => 'si_header_navigation',
-            'type'     => 'url',
+            'label'       => sprintf(__('%s URL', 'sports-illustrated'), $label),
+            'description' => __('Enter the full URL including https://', 'sports-illustrated'),
+            'section'     => 'si_header_navigation',
+            'type'        => 'url',
         ));
     }
 }
@@ -3299,5 +3301,34 @@ function si_remove_featured_image_callback() {
     }
 }
 add_action('wp_ajax_si_remove_featured_image', 'si_remove_featured_image_callback');
+
+/**
+ * Add custom rewrite rules for menu URLs
+ */
+function si_add_menu_rewrite_rules() {
+    // Add a rewrite rule for the menu page with query parameters
+    add_rewrite_rule(
+        '^menu/?$',
+        'index.php?pagename=menu',
+        'top'
+    );
+    
+    // Ensure menu query parameter is passed through
+    global $wp;
+    $wp->add_query_var('menu');
+}
+add_action('init', 'si_add_menu_rewrite_rules');
+
+/**
+ * Fix menu URLs to prevent redirection
+ */
+function si_fix_menu_urls($redirect_url, $requested_url) {
+    // If the URL contains /menu/ and a menu parameter, don't redirect
+    if (strpos($requested_url, '/menu/') !== false && strpos($requested_url, 'menu=') !== false) {
+        return false; // Prevent redirection
+    }
+    return $redirect_url;
+}
+add_filter('redirect_canonical', 'si_fix_menu_urls', 10, 2);
 
 // ... existing code ...

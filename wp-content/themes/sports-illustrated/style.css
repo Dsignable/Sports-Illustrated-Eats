@@ -1,15 +1,16 @@
 /*
 Theme Name: Sports Illustrated Clubhouse
-Theme URI: https://sportsillustrated.com
-Author: Your Agency
-Description: Custom theme for Sports Illustrated Clubhouse restaurant
-Requires at least: 6.0
+Theme URI: https://dsignable.com/
+Author: Dsignable
+Author URI: https://dsignable.com/
+Description: A custom theme for Sports Illustrated Clubhouse restaurants built by Dsignable LLC.
+Version: 1.1.0
+Requires at least: 5.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Version: 1.0.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: sports-illustrated
 */
 
-/* Base styles will be loaded from assets/css/ */ 
+/* Main styles are in assets/css/main.css */ 
