@@ -1759,13 +1759,113 @@ function si_contact_customizer($wp_customize) {
 add_action('customize_register', 'si_contact_customizer');
 
 /**
- * Menu Page Customizer Settings
+ * Add menu page customizer settings
  */
 function si_menu_page_customizer($wp_customize) {
-    // This function is now consolidated into si_menu_display_type_customizer
+    // Add Menu Page Section
+    $wp_customize->add_section('si_menu_page_section', array(
+        'title'    => __('Menu Page Settings', 'sports-illustrated'),
+        'description' => __('Configure content for the menu page.', 'sports-illustrated'),
+        'priority' => 30,
+    ));
+
+    // Menu Types
+    $menu_types = array(
+        'full'   => 'Full Menu',
+        'drink'  => 'Drink Menu',
+        'brunch' => 'Brunch Menu',
+        'happy'  => 'Happy Hour Menu',
+        'monday' => 'Monday Menu',
+        'tuesday' => 'Tuesday Menu',
+        'wednesday' => 'Wednesday Menu',
+        'thursday' => 'Thursday Menu',
+        'friday' => 'Friday Menu',
+        'saturday' => 'Saturday Menu',
+        'sunday' => 'Sunday Menu'
+    );
+
+    // Size multiplier options
+    $size_options = array(
+        '1'   => __('1x (Default Size)', 'sports-illustrated'),
+        '1.25' => __('1.25x', 'sports-illustrated'),
+        '1.5' => __('1.5x', 'sports-illustrated'),
+        '1.75' => __('1.75x', 'sports-illustrated'),
+        '2'   => __('2x', 'sports-illustrated'),
+        '2.5' => __('2.5x', 'sports-illustrated'),
+        '3'   => __('3x', 'sports-illustrated'),
+    );
+
+    foreach ($menu_types as $menu_id => $menu_name) {
+        // Menu Image
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_image', array(
+        'default'           => '',
+        'sanitize_callback' => 'absint',
+    ));
+
+        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, 'si_menu_' . $menu_id . '_image', array(
+            'label'    => $menu_name . ' Image',
+            'description' => sprintf(__('Select an image for the %s.', 'sports-illustrated'), $menu_name),
+            'section'  => 'si_menu_page_section',
+        'mime_type' => 'image',
+    )));
+
+        // Menu PDF
+        $wp_customize->add_setting('si_restaurant_menu_' . $menu_id . '_pdf', array(
+            'default'           => '',
+            'sanitize_callback' => 'absint',
+        ));
+
+        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, 'si_restaurant_menu_' . $menu_id . '_pdf', array(
+            'label'    => $menu_name . ' PDF',
+            'description' => sprintf(__('Select a PDF file for the %s.', 'sports-illustrated'), $menu_name),
+            'section'  => 'si_menu_page_section',
+            'mime_type' => 'application/pdf',
+        )));
+        
+        // Menu Size Multiplier (individual for each menu)
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_size_multiplier', array(
+            'default'           => '1',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+        $wp_customize->add_control('si_menu_' . $menu_id . '_size_multiplier', array(
+            'label'       => $menu_name . ' Size Multiplier (Desktop)',
+            'description' => sprintf(__('Increase the size of the %s image to make it more legible on desktop.', 'sports-illustrated'), $menu_name),
+            'section'     => 'si_menu_page_section',
+            'type'        => 'select',
+            'choices'     => $size_options,
+        ));
+        
+        // Tablet Size Multiplier
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
+            'default'           => '1.5',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+        $wp_customize->add_control('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
+            'label'       => $menu_name . ' Size Multiplier (Tablet)',
+            'description' => sprintf(__('Increase the size of the %s image to make it more legible on tablets.', 'sports-illustrated'), $menu_name),
+            'section'     => 'si_menu_page_section',
+            'type'        => 'select',
+            'choices'     => $size_options,
+        ));
+        
+        // Mobile Size Multiplier
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
+            'default'           => '2',
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
+        $wp_customize->add_control('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
+            'label'       => $menu_name . ' Size Multiplier (Mobile)',
+            'description' => sprintf(__('Increase the size of the %s image to make it more legible on mobile devices.', 'sports-illustrated'), $menu_name),
+            'section'     => 'si_menu_page_section',
+            'type'        => 'select',
+            'choices'     => $size_options,
+        ));
+    }
 }
-// Remove the action hook for this function
-remove_action('customize_register', 'si_menu_page_customizer');
+add_action('customize_register', 'si_menu_page_customizer');
 
 /**
  * Add loading screen customizer settings
@@ -3384,158 +3484,25 @@ function si_monthly_events_customizer($wp_customize) {
 add_action('customize_register', 'si_monthly_events_customizer');
 
 /**
- * Add option to toggle between image-based menus and written menus
+ * Add written menu customizer settings
  */
-function si_menu_display_type_customizer($wp_customize) {
-    // Add Menu Display Type Section
-    $wp_customize->add_section('si_menu_display_section', array(
-        'title'    => __('Menu Display Settings', 'sports-illustrated'),
-        'description' => __('Configure how menus are displayed on the website.', 'sports-illustrated'),
-        'priority' => 30,
+function si_written_menus_customizer($wp_customize) {
+    // Add Written Menus Section
+    $wp_customize->add_section('si_written_menus_section', array(
+        'title'    => __('Written Menus', 'sports-illustrated'),
+        'description' => __('Configure content for the written menus (Brunch, Drinks, and Full Menu).', 'sports-illustrated'),
+        'priority' => 36,
     ));
-    
-    // Menu Display Type
-    $wp_customize->add_setting('si_menu_display_type', array(
-        'default'           => 'image',
-        'sanitize_callback' => 'sanitize_text_field',
-    ));
-    
-    $wp_customize->add_control('si_menu_display_type', array(
-        'label'    => __('Menu Display Type', 'sports-illustrated'),
-        'description' => __('Choose whether to display menus as images or as written text. Written menus are available for Full Menu, Brunch Menu, and Drinks Menu. Other menus will always display as images.', 'sports-illustrated'),
-        'section'  => 'si_menu_display_section',
-        'type'     => 'radio',
-        'choices'  => array(
-            'image'  => __('Image-based Menus', 'sports-illustrated'),
-            'written' => __('Written Menus', 'sports-illustrated'),
-        ),
-    ));
-    
-    // Menu Types for Image-based Menus
-    $image_menu_types = array(
-        'full'   => 'Full Menu',
-        'drink'  => 'Drink Menu',
-        'brunch' => 'Brunch Menu',
-        'happy'  => 'Happy Hour Menu',
-        'monday' => 'Monday Menu',
-        'tuesday' => 'Tuesday Menu',
-        'wednesday' => 'Wednesday Menu',
-        'thursday' => 'Thursday Menu',
-        'friday' => 'Friday Menu',
-        'saturday' => 'Saturday Menu',
-        'sunday' => 'Sunday Menu'
-    );
 
-    // Size multiplier options
-    $size_options = array(
-        '1'   => __('1x (Default Size)', 'sports-illustrated'),
-        '1.25' => __('1.25x', 'sports-illustrated'),
-        '1.5' => __('1.5x', 'sports-illustrated'),
-        '1.75' => __('1.75x', 'sports-illustrated'),
-        '2'   => __('2x', 'sports-illustrated'),
-        '2.5' => __('2.5x', 'sports-illustrated'),
-        '3'   => __('3x', 'sports-illustrated'),
-    );
-
-    // Add Image-based Menu Settings
-    foreach ($image_menu_types as $menu_id => $menu_name) {
-        // Menu Image
-        $wp_customize->add_setting('si_menu_' . $menu_id . '_image', array(
-            'default'           => '',
-            'sanitize_callback' => 'absint',
-        ));
-
-        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, 'si_menu_' . $menu_id . '_image', array(
-            'label'    => $menu_name . ' Image',
-            'description' => sprintf(__('Select an image for the %s.', 'sports-illustrated'), $menu_name),
-            'section'  => 'si_menu_display_section',
-            'mime_type' => 'image',
-            'active_callback' => function() use ($menu_id) {
-                // Always show Happy Hour and daily menus regardless of display type
-                if (in_array($menu_id, array('happy', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))) {
-                    return true;
-                }
-                // For other menus, only show when image display type is selected
-                return get_theme_mod('si_menu_display_type', 'image') === 'image';
-            },
-        )));
-
-        // Menu PDF
-        $wp_customize->add_setting('si_restaurant_menu_' . $menu_id . '_pdf', array(
-            'default'           => '',
-            'sanitize_callback' => 'absint',
-        ));
-
-        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, 'si_restaurant_menu_' . $menu_id . '_pdf', array(
-            'label'    => $menu_name . ' PDF',
-            'description' => sprintf(__('Select a PDF file for the %s.', 'sports-illustrated'), $menu_name),
-            'section'  => 'si_menu_display_section',
-            'mime_type' => 'application/pdf',
-            'active_callback' => function() use ($menu_id) {
-                // Always show Happy Hour and daily menus regardless of display type
-                if (in_array($menu_id, array('happy', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))) {
-                    return true;
-                }
-                // For other menus, only show when image display type is selected
-                return get_theme_mod('si_menu_display_type', 'image') === 'image';
-            },
-        )));
-
-        // Only add size multipliers for Happy Hour and daily menus
-        if (in_array($menu_id, array('happy', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))) {
-            // Desktop Size Multiplier
-            $wp_customize->add_setting('si_menu_' . $menu_id . '_size_multiplier', array(
-                'default'           => '1',
-                'sanitize_callback' => 'sanitize_text_field',
-            ));
-
-            $wp_customize->add_control('si_menu_' . $menu_id . '_size_multiplier', array(
-                'label'    => $menu_name . ' Size (Desktop)',
-                'description' => sprintf(__('Adjust the size of the %s on desktop devices.', 'sports-illustrated'), $menu_name),
-                'section'  => 'si_menu_display_section',
-                'type'     => 'select',
-                'choices'  => $size_options,
-            ));
-
-            // Tablet Size Multiplier
-            $wp_customize->add_setting('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
-                'default'           => '1.5',
-                'sanitize_callback' => 'sanitize_text_field',
-            ));
-
-            $wp_customize->add_control('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
-                'label'    => $menu_name . ' Size (Tablet)',
-                'description' => sprintf(__('Adjust the size of the %s on tablet devices.', 'sports-illustrated'), $menu_name),
-                'section'  => 'si_menu_display_section',
-                'type'     => 'select',
-                'choices'  => $size_options,
-            ));
-
-            // Mobile Size Multiplier
-            $wp_customize->add_setting('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
-                'default'           => '2',
-                'sanitize_callback' => 'sanitize_text_field',
-            ));
-
-            $wp_customize->add_control('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
-                'label'    => $menu_name . ' Size (Mobile)',
-                'description' => sprintf(__('Adjust the size of the %s on mobile devices.', 'sports-illustrated'), $menu_name),
-                'section'  => 'si_menu_display_section',
-                'type'     => 'select',
-                'choices'  => $size_options,
-            ));
-        }
-    }
-    
-    // Written Menu Settings
-    $written_menu_types = array(
+    // Menu Types
+    $menu_types = array(
         'brunch' => __('Brunch Menu', 'sports-illustrated'),
         'drinks' => __('Drinks Menu', 'sports-illustrated'),
         'full'   => __('Full Menu', 'sports-illustrated')
     );
 
-    // Add settings for each written menu type
-    foreach ($written_menu_types as $menu_key => $menu_label) {
+    // Add settings for each menu type
+    foreach ($menu_types as $menu_key => $menu_label) {
         // Menu Title
         $wp_customize->add_setting("si_written_menu_{$menu_key}_title", array(
             'default'           => $menu_label,
@@ -3544,11 +3511,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
         $wp_customize->add_control("si_written_menu_{$menu_key}_title", array(
             'label'    => sprintf(__('%s Title', 'sports-illustrated'), $menu_label),
-            'section'  => 'si_menu_display_section',
+            'section'  => 'si_written_menus_section',
             'type'     => 'text',
-            'active_callback' => function() {
-                return get_theme_mod('si_menu_display_type', 'image') === 'written';
-            },
         ));
 
         // Menu Description
@@ -3559,11 +3523,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
         $wp_customize->add_control("si_written_menu_{$menu_key}_description", array(
             'label'    => sprintf(__('%s Description', 'sports-illustrated'), $menu_label),
-            'section'  => 'si_menu_display_section',
+            'section'  => 'si_written_menus_section',
             'type'     => 'textarea',
-            'active_callback' => function() {
-                return get_theme_mod('si_menu_display_type', 'image') === 'written';
-            },
         ));
 
         // Menu Sections (up to 10 sections per menu)
@@ -3576,11 +3537,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
             $wp_customize->add_control("si_written_menu_{$menu_key}_section_{$i}_title", array(
                 'label'    => sprintf(__('%s Section %d Title', 'sports-illustrated'), $menu_label, $i),
-                'section'  => 'si_menu_display_section',
+                'section'  => 'si_written_menus_section',
                 'type'     => 'text',
-                'active_callback' => function() {
-                    return get_theme_mod('si_menu_display_type', 'image') === 'written';
-                },
             ));
 
             // Section Description
@@ -3591,11 +3549,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
             $wp_customize->add_control("si_written_menu_{$menu_key}_section_{$i}_description", array(
                 'label'    => sprintf(__('%s Section %d Description', 'sports-illustrated'), $menu_label, $i),
-                'section'  => 'si_menu_display_section',
+                'section'  => 'si_written_menus_section',
                 'type'     => 'textarea',
-                'active_callback' => function() {
-                    return get_theme_mod('si_menu_display_type', 'image') === 'written';
-                },
             ));
 
             // Menu Items (up to 15 items per section)
@@ -3608,11 +3563,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
                 $wp_customize->add_control("si_written_menu_{$menu_key}_section_{$i}_item_{$j}_name", array(
                     'label'    => sprintf(__('%s Section %d Item %d Name', 'sports-illustrated'), $menu_label, $i, $j),
-                    'section'  => 'si_menu_display_section',
+                    'section'  => 'si_written_menus_section',
                     'type'     => 'text',
-                    'active_callback' => function() {
-                        return get_theme_mod('si_menu_display_type', 'image') === 'written';
-                    },
                 ));
 
                 // Item Description
@@ -3623,11 +3575,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
                 $wp_customize->add_control("si_written_menu_{$menu_key}_section_{$i}_item_{$j}_description", array(
                     'label'    => sprintf(__('%s Section %d Item %d Description', 'sports-illustrated'), $menu_label, $i, $j),
-                    'section'  => 'si_menu_display_section',
+                    'section'  => 'si_written_menus_section',
                     'type'     => 'textarea',
-                    'active_callback' => function() {
-                        return get_theme_mod('si_menu_display_type', 'image') === 'written';
-                    },
                 ));
 
                 // Item Price
@@ -3638,11 +3587,8 @@ function si_menu_display_type_customizer($wp_customize) {
 
                 $wp_customize->add_control("si_written_menu_{$menu_key}_section_{$i}_item_{$j}_price", array(
                     'label'    => sprintf(__('%s Section %d Item %d Price', 'sports-illustrated'), $menu_label, $i, $j),
-                    'section'  => 'si_menu_display_section',
+                    'section'  => 'si_written_menus_section',
                     'type'     => 'text',
-                    'active_callback' => function() {
-                        return get_theme_mod('si_menu_display_type', 'image') === 'written';
-                    },
                 ));
 
                 // Item Notes (V, GF, etc.)
@@ -3653,41 +3599,16 @@ function si_menu_display_type_customizer($wp_customize) {
 
                 $wp_customize->add_control("si_written_menu_{$menu_key}_section_{$i}_item_{$j}_notes", array(
                     'label'    => sprintf(__('%s Section %d Item %d Notes (V, GF, etc.)', 'sports-illustrated'), $menu_label, $i, $j),
-                    'section'  => 'si_menu_display_section',
+                    'section'  => 'si_written_menus_section',
                     'type'     => 'text',
-                    'active_callback' => function() {
-                        return get_theme_mod('si_menu_display_type', 'image') === 'written';
-                    },
                 ));
             }
         }
     }
 }
-add_action('customize_register', 'si_menu_display_type_customizer');
+add_action('customize_register', 'si_written_menus_customizer');
 
-/**
- * Get the menu page template based on the display type setting
- */
-function si_get_menu_template() {
-    // We're now using a single template (page-menu.php) for both display types
-    // The template itself handles the conditional display based on the menu_display_type setting
-    return 'page-menu.php';
-}
-
-/**
- * Filter the template for the menu page
- */
-function si_filter_menu_template($template) {
-    // Only apply to the menu page template
-    if (is_page_template('page-menu.php')) {
-        // We're now using a single template (page-menu.php) for both display types
-        // The template itself handles the conditional display based on the menu_display_type setting
-        return $template;
-    }
-    
-    return $template;
-}
-add_filter('template_include', 'si_filter_menu_template', 99);
+// ... existing code ...
 
 /**
  * Set default values for the written menus
@@ -3700,32 +3621,31 @@ function si_set_default_menu_values() {
     
     // Brunch Menu Defaults
     $brunch_defaults = array(
-        'si_written_menu_brunch_title' => 'BRUNCH MENU',
-        'si_written_menu_brunch_description' => 'Served 10 AM - 2 PM',
+        'si_written_menu_brunch_title' => 'Brunch Menu',
+        'si_written_menu_brunch_description' => 'Served 10am - 2pm',
         
-        // Breakfast Plates Section
-        'si_written_menu_brunch_section_1_title' => 'Breakfast Plates',
-        'si_written_menu_brunch_section_1_description' => '',
-        
+        // Classic Breakfast Section
+        'si_written_menu_brunch_section_1_title' => 'Breakfast Classics',
         'si_written_menu_brunch_section_1_item_1_name' => 'Classic Breakfast',
-        'si_written_menu_brunch_section_1_item_1_description' => 'Two eggs any style, broiled tomato, herb fried potatoes<br>Choice of: Double Smoked Bacon | Apple Bangers | Avocado<br>Choice of: Sourdough Texas | Clubhouse Multigrain Toast',
+        'si_written_menu_brunch_section_1_item_1_description' => 'Two Eggs Any Style, Broiled Tomato, Herb Fried Potatoes. Choice of: Double Smoked Bacon | Apple Bangers | Avocado. Choice of: Sourdough Texas |CLUBHOUSE Multigrain Toast',
         'si_written_menu_brunch_section_1_item_1_price' => '18',
+        'si_written_menu_brunch_section_1_item_1_notes' => 'V',
         
         'si_written_menu_brunch_section_1_item_2_name' => 'Lumberjack Breakfast',
-        'si_written_menu_brunch_section_1_item_2_description' => 'Two eggs any style, pancake short stack, apple bangers, double smoked bacon, herb fried potatoes<br>Choice of: Sourdough Texas | Clubhouse Multigrain Toast',
+        'si_written_menu_brunch_section_1_item_2_description' => 'Two Eggs Any Style, Pancake Short Stack, Apple Bangers, Double Smoked Bacon, Herb Fried Potatoes. Choice of: Sourdough Texas |CLUBHOUSE Multigrain Toast',
         'si_written_menu_brunch_section_1_item_2_price' => '23',
         
         'si_written_menu_brunch_section_1_item_3_name' => 'Away Game Breakfast Sandwich',
-        'si_written_menu_brunch_section_1_item_3_description' => 'Two over medium eggs, American cheese, double smoked bacon, Roma tomato, rocket, garlic chive aioli, herb fried potatoes',
-        'si_written_menu_brunch_section_1_item_3_price' => '19.5',
+        'si_written_menu_brunch_section_1_item_3_description' => 'Two Over Medium Eggs, American Cheese, Double Smoked Bacon, Roma Tomato, Rocket, Garlic Chive Aioli, Herb Fried Potatoes',
+        'si_written_menu_brunch_section_1_item_3_price' => '19½',
         
         // Eggs Benedict Section
         'si_written_menu_brunch_section_2_title' => 'Eggs Benedict',
-        'si_written_menu_brunch_section_2_description' => 'Housemade biscuits, 2 poached eggs, hollandaise, herb fried potatoes',
+        'si_written_menu_brunch_section_2_description' => 'Housemade Biscuits, 2 Poached Eggs, Hollandaise, Herb Fried Potatoes',
         
         'si_written_menu_brunch_section_2_item_1_name' => 'Fried Chicken',
         'si_written_menu_brunch_section_2_item_1_description' => 'Nashville Fried Chicken',
-        'si_written_menu_brunch_section_2_item_1_price' => '22.5',
+        'si_written_menu_brunch_section_2_item_1_price' => '22½',
         
         'si_written_menu_brunch_section_2_item_2_name' => 'The OG',
         'si_written_menu_brunch_section_2_item_2_description' => 'Canadian Bacon',
@@ -3733,11 +3653,12 @@ function si_set_default_menu_values() {
         
         'si_written_menu_brunch_section_2_item_3_name' => 'Tom Avo',
         'si_written_menu_brunch_section_2_item_3_description' => 'Avocado, Grilled Roma Tomato',
-        'si_written_menu_brunch_section_2_item_3_price' => '19.5',
+        'si_written_menu_brunch_section_2_item_3_price' => '19½',
+        'si_written_menu_brunch_section_2_item_3_notes' => 'V',
         
         // Breakfast Poutine Section
         'si_written_menu_brunch_section_3_title' => 'Breakfast Poutine',
-        'si_written_menu_brunch_section_3_description' => '2 poached eggs, hollandaise, cheese curds, herb fried potatoes, arugula, cilantro',
+        'si_written_menu_brunch_section_3_description' => '2 Poached Eggs, Hollandaise, Cheese Curds, Herb Fried Potatoes, Arugula, Cilantro',
         
         'si_written_menu_brunch_section_3_item_1_name' => 'Pulled Pork',
         'si_written_menu_brunch_section_3_item_1_description' => 'Citrus Braised Pulled Pork',
@@ -3745,47 +3666,44 @@ function si_set_default_menu_values() {
         
         'si_written_menu_brunch_section_3_item_2_name' => 'Bacon & Egg',
         'si_written_menu_brunch_section_3_item_2_description' => 'Double Smoked Bacon',
-        'si_written_menu_brunch_section_3_item_2_price' => '19.5',
+        'si_written_menu_brunch_section_3_item_2_price' => '19½',
         
         'si_written_menu_brunch_section_3_item_3_name' => 'SoCal',
         'si_written_menu_brunch_section_3_item_3_description' => 'Hass Avocado, Heirloom Tomato',
-        'si_written_menu_brunch_section_3_item_3_price' => '19.5',
+        'si_written_menu_brunch_section_3_item_3_price' => '19½',
+        'si_written_menu_brunch_section_3_item_3_notes' => 'V',
         
         // Signatures Section
         'si_written_menu_brunch_section_4_title' => 'Signatures',
-        'si_written_menu_brunch_section_4_description' => '',
         
-        'si_written_menu_brunch_section_4_item_1_name' => 'This French Toast',
-        'si_written_menu_brunch_section_4_item_1_description' => 'Buttermilk fried chicken, French toast, chili maple syrup, bread & butter pickles, scallions, hot chilies',
+        'si_written_menu_brunch_section_4_item_1_name' => 'The French Toast',
+        'si_written_menu_brunch_section_4_item_1_description' => 'Buttermilk Fried Chicken, French Toast with Chili Maple Syrup, Bread and Butter Pickles, Scallions, Hot Chilies. HAS FRIED CHICKEN ON IT',
         'si_written_menu_brunch_section_4_item_1_price' => '23',
         
         'si_written_menu_brunch_section_4_item_2_name' => 'Banana Pecan Stack',
-        'si_written_menu_brunch_section_4_item_2_description' => 'Chef Tiffany\'s buttermilk pancakes, caramelized bananas, maple syrup, toasted pecans, whipped cinnamon butter',
+        'si_written_menu_brunch_section_4_item_2_description' => 'Chef Tiffany\'s Buttermilk Pancakes with Caramelized Bananas, Maple Syrup, Toasted Pecans, and Whipped Cinnamon Butter',
         'si_written_menu_brunch_section_4_item_2_price' => '23',
         
-        // Kids Breakfast Section
-        'si_written_menu_brunch_section_5_title' => 'Kids Breakfast',
-        'si_written_menu_brunch_section_5_description' => '',
-        
-        'si_written_menu_brunch_section_5_item_1_name' => 'Pancakes',
-        'si_written_menu_brunch_section_5_item_1_description' => 'Two pancakes, maple syrup, blueberry compote',
-        'si_written_menu_brunch_section_5_item_1_price' => '12',
-        
-        'si_written_menu_brunch_section_5_item_2_name' => 'Bacon and Eggs',
-        'si_written_menu_brunch_section_5_item_2_description' => 'Two eggs, 1 slice of bacon, potato wedges',
-        'si_written_menu_brunch_section_5_item_2_price' => '12',
-        
         // K.O. Treat Section
-        'si_written_menu_brunch_section_6_title' => 'K.O. Treat',
-        'si_written_menu_brunch_section_6_description' => '',
+        'si_written_menu_brunch_section_5_title' => 'K.O. Treat',
         
-        'si_written_menu_brunch_section_6_item_1_name' => 'French Toast Bites',
-        'si_written_menu_brunch_section_6_item_1_description' => 'Sweet Hawaiian roll French toast, Nutella, cinnamon chili sugar',
-        'si_written_menu_brunch_section_6_item_1_price' => '10',
+        'si_written_menu_brunch_section_5_item_1_name' => 'French Toast Bites',
+        'si_written_menu_brunch_section_5_item_1_description' => 'Sweet Hawaiian Roll French Toast, Nutella, Cinnamon Chili Sugar',
+        'si_written_menu_brunch_section_5_item_1_price' => '10',
+        
+        // Kids Breakfast Section
+        'si_written_menu_brunch_section_6_title' => 'Kids Breakfast',
+        
+        'si_written_menu_brunch_section_6_item_1_name' => 'Pancakes',
+        'si_written_menu_brunch_section_6_item_1_description' => 'Two Pancakes, Maple Syrup, Blueberry Compote',
+        'si_written_menu_brunch_section_6_item_1_price' => '12',
+        
+        'si_written_menu_brunch_section_6_item_2_name' => 'Bacon and Eggs',
+        'si_written_menu_brunch_section_6_item_2_description' => 'Two Eggs, 1 Slice of Bacon, Potato Wedges',
+        'si_written_menu_brunch_section_6_item_2_price' => '12',
         
         // Bench Warmers Section
-        'si_written_menu_brunch_section_7_title' => 'Bench Warmers (Add-ons)',
-        'si_written_menu_brunch_section_7_description' => '',
+        'si_written_menu_brunch_section_7_title' => 'Bench Warmers',
         
         'si_written_menu_brunch_section_7_item_1_name' => 'Herb Fried Potatoes',
         'si_written_menu_brunch_section_7_item_1_price' => '7',
@@ -3808,238 +3726,233 @@ function si_set_default_menu_values() {
     
     // Drinks Menu Defaults
     $drinks_defaults = array(
-        'si_written_menu_drinks_title' => 'DRINKS MENU',
-        'si_written_menu_drinks_description' => '',
-        
-        // Wine Section
-        'si_written_menu_drinks_section_1_title' => 'Wine',
-        'si_written_menu_drinks_section_1_description' => '',
-        
-        // White Wine Subsection
-        'si_written_menu_drinks_section_1_item_1_name' => 'White',
-        'si_written_menu_drinks_section_1_item_1_description' => '',
-        'si_written_menu_drinks_section_1_item_1_price' => '',
-        
-        'si_written_menu_drinks_section_1_item_2_name' => 'Peller Estate Chardonnay',
-        'si_written_menu_drinks_section_1_item_2_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_2_price' => '9/12/32',
-        
-        'si_written_menu_drinks_section_1_item_3_name' => 'Red Rooster Pinot Gris',
-        'si_written_menu_drinks_section_1_item_3_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_3_price' => '11/15/35',
-        
-        'si_written_menu_drinks_section_1_item_4_name' => 'Gray Monk Pinot Blanc',
-        'si_written_menu_drinks_section_1_item_4_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_4_price' => '11/14/38',
-        
-        'si_written_menu_drinks_section_1_item_5_name' => 'Tinhorn Creek Gewurztraminer',
-        'si_written_menu_drinks_section_1_item_5_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_5_price' => '12/17/44',
-        
-        'si_written_menu_drinks_section_1_item_6_name' => 'Blasted Church Hatfield\'s Fuse Blend',
-        'si_written_menu_drinks_section_1_item_6_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_6_price' => '13/18/45',
-        
-        'si_written_menu_drinks_section_1_item_7_name' => 'Oyster Bay Sauvignon Blanc',
-        'si_written_menu_drinks_section_1_item_7_description' => 'New Zealand',
-        'si_written_menu_drinks_section_1_item_7_price' => '14/19/49',
-        
-        // Rosé Subsection
-        'si_written_menu_drinks_section_1_item_8_name' => 'Rosé',
-        'si_written_menu_drinks_section_1_item_8_description' => '',
-        'si_written_menu_drinks_section_1_item_8_price' => '',
-        
-        'si_written_menu_drinks_section_1_item_9_name' => 'Gray Monk Latitude 50',
-        'si_written_menu_drinks_section_1_item_9_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_9_price' => '11/14/38',
-        
-        'si_written_menu_drinks_section_1_item_10_name' => 'Dirty Laundry Hush',
-        'si_written_menu_drinks_section_1_item_10_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_10_price' => '13/18/45',
-        
-        // Red Wine Subsection
-        'si_written_menu_drinks_section_1_item_11_name' => 'Red',
-        'si_written_menu_drinks_section_1_item_11_description' => '',
-        'si_written_menu_drinks_section_1_item_11_price' => '',
-        
-        'si_written_menu_drinks_section_1_item_12_name' => 'Peller Estate Cabernet Merlot',
-        'si_written_menu_drinks_section_1_item_12_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_12_price' => '9/12/32',
-        
-        'si_written_menu_drinks_section_1_item_13_name' => 'Masi Corvina Malbec',
-        'si_written_menu_drinks_section_1_item_13_description' => 'Argentina',
-        'si_written_menu_drinks_section_1_item_13_price' => '11/14/40',
-        
-        'si_written_menu_drinks_section_1_item_14_name' => 'Red Rooster Cabernet Merlot',
-        'si_written_menu_drinks_section_1_item_14_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_14_price' => '12/17/44',
-        
-        'si_written_menu_drinks_section_1_item_15_name' => 'Oyster Bay Merlot',
-        'si_written_menu_drinks_section_1_item_15_description' => 'New Zealand',
-        'si_written_menu_drinks_section_1_item_15_price' => '14/19/52',
-        
-        // More Red Wines and Bubbles
-        'si_written_menu_drinks_section_2_title' => 'More Wines',
-        'si_written_menu_drinks_section_2_description' => '',
-        
-        'si_written_menu_drinks_section_2_item_1_name' => 'Blasted Church Big Bang Theory Blend',
-        'si_written_menu_drinks_section_2_item_1_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_2_item_1_price' => '15/20/55',
-        
-        'si_written_menu_drinks_section_2_item_2_name' => 'Oyster Bay Pinot Noir',
-        'si_written_menu_drinks_section_2_item_2_description' => 'New Zealand',
-        'si_written_menu_drinks_section_2_item_2_price' => '15/20/55',
-        
-        'si_written_menu_drinks_section_2_item_3_name' => 'Bubbles',
-        'si_written_menu_drinks_section_2_item_3_description' => '',
-        'si_written_menu_drinks_section_2_item_3_price' => '',
-        
-        'si_written_menu_drinks_section_2_item_4_name' => 'Masi Modello Prosecco DOC',
-        'si_written_menu_drinks_section_2_item_4_description' => 'Veneto, Italy',
-        'si_written_menu_drinks_section_2_item_4_price' => '11/39',
-        
-        // Cocktails Section
-        'si_written_menu_drinks_section_3_title' => 'Cocktails',
-        'si_written_menu_drinks_section_3_description' => '',
-        
-        // Classics Subsection
-        'si_written_menu_drinks_section_3_item_1_name' => 'Classics',
-        'si_written_menu_drinks_section_3_item_1_description' => '',
-        'si_written_menu_drinks_section_3_item_1_price' => '',
-        
-        'si_written_menu_drinks_section_3_item_2_name' => 'Shaft',
-        'si_written_menu_drinks_section_3_item_2_description' => 'Vodka, Bailey\'s, Kahlua, cold brew coffee',
-        'si_written_menu_drinks_section_3_item_2_price' => '8',
-        
-        'si_written_menu_drinks_section_3_item_3_name' => 'Aperol Spritz',
-        'si_written_menu_drinks_section_3_item_3_description' => 'Aperol, prosecco, topped with club soda',
-        'si_written_menu_drinks_section_3_item_3_price' => '12',
-        
-        'si_written_menu_drinks_section_3_item_4_name' => 'Ranch Water',
-        'si_written_menu_drinks_section_3_item_4_description' => 'Tequila blanco, lime juice, topped with sparkling water',
-        'si_written_menu_drinks_section_3_item_4_price' => '12',
-        
-        'si_written_menu_drinks_section_3_item_5_name' => 'Moscow Mule',
-        'si_written_menu_drinks_section_3_item_5_description' => 'Ketel One vodka, lime juice, topped with ginger beer',
-        'si_written_menu_drinks_section_3_item_5_price' => '12.5',
-        
-        'si_written_menu_drinks_section_3_item_6_name' => 'Gin Basil Smash',
-        'si_written_menu_drinks_section_3_item_6_description' => 'Empress elderflower rose gin, basil, lime juice, simple syrup',
-        'si_written_menu_drinks_section_3_item_6_price' => '13',
-        
-        'si_written_menu_drinks_section_3_item_7_name' => 'Negroni',
-        'si_written_menu_drinks_section_3_item_7_description' => 'Gin, Campari, sweet vermouth',
-        'si_written_menu_drinks_section_3_item_7_price' => '14',
-        
-        'si_written_menu_drinks_section_3_item_8_name' => 'Old Fashioned',
-        'si_written_menu_drinks_section_3_item_8_description' => 'Buffalo Trace, orange bitters',
-        'si_written_menu_drinks_section_3_item_8_price' => '14.5',
-        
-        // Signature Cocktails
-        'si_written_menu_drinks_section_4_title' => 'Signature Cocktails',
-        'si_written_menu_drinks_section_4_description' => '',
-        
-        'si_written_menu_drinks_section_4_item_1_name' => 'Espresso Martini',
-        'si_written_menu_drinks_section_4_item_1_description' => 'Vodka, Kahlua, Bailey\'s, cold brew coffee, cream, toasted marshmallow',
-        'si_written_menu_drinks_section_4_item_1_price' => '14',
-        
-        'si_written_menu_drinks_section_4_item_2_name' => 'Spicy Mango Margarita',
-        'si_written_menu_drinks_section_4_item_2_description' => 'Blanco tequila, triple sec, passionfruit juice, mango purée, jalapeño chili syrup',
-        'si_written_menu_drinks_section_4_item_2_price' => '13',
-        
-        'si_written_menu_drinks_section_4_item_3_name' => 'Caribbean Ripple',
-        'si_written_menu_drinks_section_4_item_3_description' => 'White rum, butter ripple, pineapple juice',
-        'si_written_menu_drinks_section_4_item_3_price' => '13',
-        
-        'si_written_menu_drinks_section_4_item_4_name' => 'Sex on the Peach',
-        'si_written_menu_drinks_section_4_item_4_description' => 'Vodka, peach schnapps, peach syrup, lemon juice, fuzzy peach garnish',
-        'si_written_menu_drinks_section_4_item_4_price' => '13',
-        
-        'si_written_menu_drinks_section_4_item_5_name' => 'Rose Gin Sour',
-        'si_written_menu_drinks_section_4_item_5_description' => 'Empress rose gin, St. Germaine, elderflower, lemon juice, rosemary syrup',
-        'si_written_menu_drinks_section_4_item_5_price' => '14',
-        
-        'si_written_menu_drinks_section_4_item_6_name' => 'Empress Gin Bloom',
-        'si_written_menu_drinks_section_4_item_6_description' => 'Empress gin, rosemary syrup, Fentiman\'s grapefruit tonic water',
-        'si_written_menu_drinks_section_4_item_6_price' => '14',
+        'si_written_menu_drinks_title' => 'Drinks Menu',
         
         // On Tap Section
-        'si_written_menu_drinks_section_5_title' => 'On Tap',
-        'si_written_menu_drinks_section_5_description' => '',
+        'si_written_menu_drinks_section_1_title' => 'On Tap',
         
-        // Domestic Beers Subsection
-        'si_written_menu_drinks_section_5_item_1_name' => 'Domestic Beers',
-        'si_written_menu_drinks_section_5_item_1_description' => '',
-        'si_written_menu_drinks_section_5_item_1_price' => '',
+        // Domestic Subsection
+        'si_written_menu_drinks_section_1_item_1_name' => 'Domestic',
+        'si_written_menu_drinks_section_1_item_1_description' => 'ABV | 16oz | Pitcher',
         
-        'si_written_menu_drinks_section_5_item_2_name' => 'Thunder Beer Lager',
-        'si_written_menu_drinks_section_5_item_2_description' => 'White Rock Beach',
-        'si_written_menu_drinks_section_5_item_2_price' => '5% | 8 / 25',
+        'si_written_menu_drinks_section_1_item_2_name' => 'Thunder Beer',
+        'si_written_menu_drinks_section_1_item_2_description' => 'white rock beach',
+        'si_written_menu_drinks_section_1_item_2_price' => '5% | 8 | 25',
         
-        'si_written_menu_drinks_section_5_item_3_name' => 'Landschark Lager',
-        'si_written_menu_drinks_section_5_item_3_description' => '',
-        'si_written_menu_drinks_section_5_item_3_price' => '4.6% | 8 / 25',
+        'si_written_menu_drinks_section_1_item_3_name' => 'Landmark Lager',
+        'si_written_menu_drinks_section_1_item_3_description' => 'landshark',
+        'si_written_menu_drinks_section_1_item_3_price' => '4.8% | 8 | 25',
         
-        'si_written_menu_drinks_section_5_item_4_name' => 'Tilt Lager',
-        'si_written_menu_drinks_section_5_item_4_description' => 'Phillips',
-        'si_written_menu_drinks_section_5_item_4_price' => '5% | 8 / 25',
+        'si_written_menu_drinks_section_1_item_4_name' => 'Tilt Lager',
+        'si_written_menu_drinks_section_1_item_4_description' => 'phillips',
+        'si_written_menu_drinks_section_1_item_4_price' => '5% | 8 | 25',
         
-        'si_written_menu_drinks_section_5_item_5_name' => 'Premium Lager Series',
-        'si_written_menu_drinks_section_5_item_5_description' => 'Barnside',
-        'si_written_menu_drinks_section_5_item_5_price' => '5.4% | 8 / 25',
+        'si_written_menu_drinks_section_1_item_5_name' => 'Premium Lager Series',
+        'si_written_menu_drinks_section_1_item_5_description' => 'barnside',
+        'si_written_menu_drinks_section_1_item_5_price' => '5.4% | 8 | 25',
+        
+        'si_written_menu_drinks_section_1_item_6_name' => 'Salted Lime Lager',
+        'si_written_menu_drinks_section_1_item_6_description' => 'la cerveceria astilleros',
+        'si_written_menu_drinks_section_1_item_6_price' => '4.8% | 9 | 25',
+        
+        'si_written_menu_drinks_section_1_item_7_name' => 'Pineapple Pilsner',
+        'si_written_menu_drinks_section_1_item_7_description' => 'storm',
+        'si_written_menu_drinks_section_1_item_7_price' => '5% | 9 | 25',
+        
+        'si_written_menu_drinks_section_1_item_8_name' => 'Fat Tug IPA',
+        'si_written_menu_drinks_section_1_item_8_description' => 'driftwood',
+        'si_written_menu_drinks_section_1_item_8_price' => '7% | 9 | 25',
+        
+        'si_written_menu_drinks_section_1_item_9_name' => 'Humans Hazy IPA',
+        'si_written_menu_drinks_section_1_item_9_description' => 'parkside',
+        'si_written_menu_drinks_section_1_item_9_price' => '6.3% | 8 | 25',
+        
+        'si_written_menu_drinks_section_1_item_10_name' => 'Play Dead IPA',
+        'si_written_menu_drinks_section_1_item_10_description' => 'yellowdog',
+        'si_written_menu_drinks_section_1_item_10_price' => '6.8% | 8 | 25',
+        
+        'si_written_menu_drinks_section_1_item_11_name' => 'Space Kitty Juicy IPA',
+        'si_written_menu_drinks_section_1_item_11_description' => 'parallel 49',
+        'si_written_menu_drinks_section_1_item_11_price' => '6.5% | 8 | 25',
+        
+        'si_written_menu_drinks_section_1_item_12_name' => 'Raspberry Wheat Ale',
+        'si_written_menu_drinks_section_1_item_12_description' => 'twin sails',
+        'si_written_menu_drinks_section_1_item_12_price' => '5.1% | 8 | 25',
+        
+        // Import Subsection
+        'si_written_menu_drinks_section_2_title' => 'Import',
+        'si_written_menu_drinks_section_2_description' => 'ABV | 16oz',
+        
+        'si_written_menu_drinks_section_2_item_1_name' => 'Stella Artois',
+        'si_written_menu_drinks_section_2_item_1_price' => '5.2% | 11',
+        
+        'si_written_menu_drinks_section_2_item_2_name' => 'Carlsberg Pilsner',
+        'si_written_menu_drinks_section_2_item_2_price' => '5% | 11',
+        
+        'si_written_menu_drinks_section_2_item_3_name' => 'Kronenbourg Blanc',
+        'si_written_menu_drinks_section_2_item_3_price' => '5% | 11',
+        
+        'si_written_menu_drinks_section_2_item_4_name' => 'Guinness',
+        'si_written_menu_drinks_section_2_item_4_price' => '4.5% | 11',
+        
+        'si_written_menu_drinks_section_2_item_5_name' => 'Somersby',
+        'si_written_menu_drinks_section_2_item_5_price' => '4.5% | 11',
+        
+        // Cocktails on Tap Section
+        'si_written_menu_drinks_section_3_title' => 'Cocktails on Tap',
+        'si_written_menu_drinks_section_3_description' => '9oz',
+        
+        'si_written_menu_drinks_section_3_item_1_name' => 'Please! Margarita',
+        'si_written_menu_drinks_section_3_item_1_price' => '6.9% | 12.5',
+        
+        'si_written_menu_drinks_section_3_item_2_name' => 'Please! Raspberry Mint',
+        'si_written_menu_drinks_section_3_item_2_price' => '6.9% | 12.5',
+        
+        // Rotating Taps Section
+        'si_written_menu_drinks_section_4_title' => 'Rotating Taps',
+        'si_written_menu_drinks_section_4_description' => 'Ask your server for selections | 16oz',
+        
+        // Off Tap Section
+        'si_written_menu_drinks_section_5_title' => 'Off Tap',
+        
+        // Seltzer Subsection
+        'si_written_menu_drinks_section_5_item_1_name' => 'Seltzer',
+        'si_written_menu_drinks_section_5_item_1_description' => 'ABV',
+        
+        'si_written_menu_drinks_section_5_item_2_name' => 'Happy Dad',
+        'si_written_menu_drinks_section_5_item_2_description' => 'assorted flavours',
+        'si_written_menu_drinks_section_5_item_2_price' => '5% | 8',
+        
+        'si_written_menu_drinks_section_5_item_3_name' => 'The Long Drink',
+        'si_written_menu_drinks_section_5_item_3_description' => 'original or sugar free',
+        'si_written_menu_drinks_section_5_item_3_price' => '5% | 8',
+        
+        'si_written_menu_drinks_section_5_item_4_name' => 'White Claw',
+        'si_written_menu_drinks_section_5_item_4_description' => 'lime, black cherry, or mango',
+        'si_written_menu_drinks_section_5_item_4_price' => '5% | 8',
+        
+        'si_written_menu_drinks_section_5_item_5_name' => 'No Boats on Sunday',
+        'si_written_menu_drinks_section_5_item_5_price' => '5% | 8',
+        
+        // Bottles Subsection
+        'si_written_menu_drinks_section_6_title' => 'Bottles',
+        
+        'si_written_menu_drinks_section_6_item_1_name' => 'Bud Light (330ML)',
+        'si_written_menu_drinks_section_6_item_1_price' => '4.2% | 5.5',
+        
+        'si_written_menu_drinks_section_6_item_2_name' => 'Kokanee (330ML)',
+        'si_written_menu_drinks_section_6_item_2_price' => '5% | 5.5',
+        
+        'si_written_menu_drinks_section_6_item_3_name' => 'Canadian (330ML)',
+        'si_written_menu_drinks_section_6_item_3_price' => '5% | 5.5',
+        
+        'si_written_menu_drinks_section_6_item_4_name' => 'Corona (330ML)',
+        'si_written_menu_drinks_section_6_item_4_price' => '4.6% | 6.5',
+        
+        // Cans Subsection
+        'si_written_menu_drinks_section_7_title' => 'Cans',
+        
+        'si_written_menu_drinks_section_7_item_1_name' => 'Thunder Beer Lager (355ML)',
+        'si_written_menu_drinks_section_7_item_1_price' => '5% | 5',
+        
+        'si_written_menu_drinks_section_7_item_2_name' => 'Glutenberg Blonde (473ML)',
+        'si_written_menu_drinks_section_7_item_2_price' => '4.5% | 8',
+        'si_written_menu_drinks_section_7_item_2_notes' => 'GF',
+        
+        // Non-Alcoholic Section
+        'si_written_menu_drinks_section_8_title' => 'Non-Alcoholic',
+        
+        'si_written_menu_drinks_section_8_item_1_name' => 'Corona Sunbrew (330ML)',
+        'si_written_menu_drinks_section_8_item_1_price' => '5',
+        
+        'si_written_menu_drinks_section_8_item_2_name' => 'Heineken 0.0',
+        'si_written_menu_drinks_section_8_item_2_price' => '5',
+        
+        'si_written_menu_drinks_section_8_item_3_name' => 'Fentiman\'s Ginger Beer',
+        'si_written_menu_drinks_section_8_item_3_price' => '6',
+        
+        'si_written_menu_drinks_section_8_item_4_name' => 'Fentiman\'s Rose Lemonade',
+        'si_written_menu_drinks_section_8_item_4_price' => '6',
+        
+        'si_written_menu_drinks_section_8_item_5_name' => 'Red Bull Can',
+        'si_written_menu_drinks_section_8_item_5_price' => '7',
+        
+        // Mocktails Section
+        'si_written_menu_drinks_section_9_title' => 'Mocktails',
+        
+        'si_written_menu_drinks_section_9_item_1_name' => 'Virgin Caesar',
+        'si_written_menu_drinks_section_9_item_1_description' => 'clamato juice, tabasco, worchester sauce, pickled bean',
+        'si_written_menu_drinks_section_9_item_1_price' => '8',
+        
+        'si_written_menu_drinks_section_9_item_2_name' => 'Virgin Mojito',
+        'si_written_menu_drinks_section_9_item_2_description' => 'fresh squeezed lime, mint, soda',
+        'si_written_menu_drinks_section_9_item_2_price' => '8',
+        
+        'si_written_menu_drinks_section_9_item_3_name' => 'Rosemary-Pomegranate Soda',
+        'si_written_menu_drinks_section_9_item_3_description' => 'pomegranate juice, rosemary simple syrup, soda',
+        'si_written_menu_drinks_section_9_item_3_price' => '8',
+        
+        'si_written_menu_drinks_section_9_item_4_name' => 'Blueberry Mint Lemonade',
+        'si_written_menu_drinks_section_9_item_4_description' => 'blueberry syrup, mint, house made lemonade',
+        'si_written_menu_drinks_section_9_item_4_price' => '8',
+        
+        // Wine Section
+        'si_written_menu_drinks_section_10_title' => 'Wine',
+        
+        // White Wine Subsection
+        'si_written_menu_drinks_section_10_item_1_name' => 'White',
+        'si_written_menu_drinks_section_10_item_1_description' => '5oz | 8oz | BTL',
+        
+        'si_written_menu_drinks_section_10_item_2_name' => 'Peller Estate Family Series Chardonnay',
+        'si_written_menu_drinks_section_10_item_2_description' => 'okanagan, canada',
     );
     
     // Full Menu Defaults
     $full_defaults = array(
         'si_written_menu_full_title' => 'Full Menu',
-        'si_written_menu_full_description' => 'Served daily from 11am to 10pm',
         
-        // Starting Line Up Section (Appetizers)
+        // Starting Line Up Section
         'si_written_menu_full_section_1_title' => 'Starting Line Up',
-        'si_written_menu_full_section_1_description' => 'Appetizers to kick off your meal',
         
         'si_written_menu_full_section_1_item_1_name' => 'Truffle Fries',
-        'si_written_menu_full_section_1_item_1_description' => 'Golden crisp fries, black and white truffle butter, parmesan reggiano, green peppercorn aioli',
+        'si_written_menu_full_section_1_item_1_description' => 'golden crisp fries, black and white truffle butter, parmesan reggiano, green peppercorn aioli',
         'si_written_menu_full_section_1_item_1_price' => '14.5',
         
-        'si_written_menu_full_section_1_item_2_name' => 'Loaded Nachos',
-        'si_written_menu_full_section_1_item_2_description' => 'Corn tortilla chips, queso, pico de gallo, jalapeños, sour cream, guacamole',
-        'si_written_menu_full_section_1_item_2_price' => '16',
-        'si_written_menu_full_section_1_item_2_notes' => 'V',
+        'si_written_menu_full_section_1_item_2_name' => 'Chips & Guac',
+        'si_written_menu_full_section_1_item_2_description' => 'guacamole, yellow and blue corn tortilla chips',
+        'si_written_menu_full_section_1_item_2_price' => '15.5',
         
-        'si_written_menu_full_section_1_item_3_name' => 'Chicken Wings',
-        'si_written_menu_full_section_1_item_3_description' => 'Choice of buffalo, BBQ, or dry rub. Served with blue cheese or ranch',
-        'si_written_menu_full_section_1_item_3_price' => '18',
+        'si_written_menu_full_section_1_item_3_name' => 'Poutine',
+        'si_written_menu_full_section_1_item_3_description' => 'golden crisp fries, SIC cheese curds, gravy, green peppercorn aioli',
+        'si_written_menu_full_section_1_item_3_price' => '16',
         
-        // Main Event Section (Entrees)
-        'si_written_menu_full_section_2_title' => 'Main Event',
-        'si_written_menu_full_section_2_description' => 'Signature entrees served with your choice of side',
+        'si_written_menu_full_section_1_item_4_name' => 'Ahi Poke Tacos',
+        'si_written_menu_full_section_1_item_4_description' => 'ahi tuna, flour tortillas, sesame soy vinaigrette, spicy mayo, pineapple, jalapeño, sushi rice',
+        'si_written_menu_full_section_1_item_4_price' => '18',
         
-        'si_written_menu_full_section_2_item_1_name' => 'Championship Burger',
-        'si_written_menu_full_section_2_item_1_description' => 'Angus beef, aged cheddar, lettuce, tomato, onion, special sauce, brioche bun',
-        'si_written_menu_full_section_2_item_1_price' => '22',
+        'si_written_menu_full_section_1_item_5_name' => 'Brown Sugar Ribs',
+        'si_written_menu_full_section_1_item_5_description' => 'slow roasted brown sugar ribs, alabama white bbq sauce',
+        'si_written_menu_full_section_1_item_5_price' => '19',
         
-        'si_written_menu_full_section_2_item_2_name' => 'Grilled Salmon',
-        'si_written_menu_full_section_2_item_2_description' => 'Atlantic salmon, lemon herb butter, seasonal vegetables',
-        'si_written_menu_full_section_2_item_2_price' => '28',
-        'si_written_menu_full_section_2_item_2_notes' => 'GF',
+        'si_written_menu_full_section_1_item_6_name' => 'Campus Wings',
+        'si_written_menu_full_section_1_item_6_description' => 'salt + pepper | buffalo | lemon | suicide cherry',
+        'si_written_menu_full_section_1_item_6_price' => '19',
         
-        'si_written_menu_full_section_2_item_3_name' => 'Ribeye Steak',
-        'si_written_menu_full_section_2_item_3_description' => '12oz ribeye, garlic butter, roasted potatoes',
-        'si_written_menu_full_section_2_item_3_price' => '36',
-        'si_written_menu_full_section_2_item_3_notes' => 'GF',
+        'si_written_menu_full_section_1_item_7_name' => 'Southern Fried Chicken Tenders',
+        'si_written_menu_full_section_1_item_7_description' => 'medium spice fried chicken tenders, buttermilk comeback sauce',
+        'si_written_menu_full_section_1_item_7_price' => '19.5',
         
-        // Overtime Section (Desserts)
-        'si_written_menu_full_section_3_title' => 'Overtime',
-        'si_written_menu_full_section_3_description' => 'Sweet endings to your meal',
+        'si_written_menu_full_section_1_item_8_name' => 'Spicy Tuna Smash',
+        'si_written_menu_full_section_1_item_8_description' => 'osaka style pressed sushi, ahi tuna, avocado, cucumber, spicy mayo, yuzu sauce, scallion oil',
+        'si_written_menu_full_section_1_item_8_price' => '20',
         
-        'si_written_menu_full_section_3_item_1_name' => 'Championship Chocolate Cake',
-        'si_written_menu_full_section_3_item_1_description' => 'Layers of rich chocolate cake, chocolate ganache, vanilla ice cream',
-        'si_written_menu_full_section_3_item_1_price' => '12',
+        'si_written_menu_full_section_1_item_9_name' => 'Sticky Chicken Lettuce Wraps',
+        'si_written_menu_full_section_1_item_9_description' => 'sticky sesame chicken, iceberg lettuce, stir fry vegetables, crispy noodles, toasted cashews, ginger soy',
+        'si_written_menu_full_section_1_item_9_price' => '22',
         
-        'si_written_menu_full_section_3_item_2_name' => 'New York Cheesecake',
-        'si_written_menu_full_section_3_item_2_description' => 'Classic cheesecake, berry compote, whipped cream',
-        'si_written_menu_full_section_3_item_2_price' => '10',
+        'si_written_menu_full_section_1_item_10_name' => 'Mighty Nachos',
+        'si_written_menu_full_section_1_item_10_description' => 'yellow and blue corn tortillas, monterey jack cheese, peppers, jalapeños, red onion, green onion, avocado, crema, cilantro, salsa',
+        'si_written_menu_full_section_1_item_10_price' => '25.5'
     );
     
     // Set default values for brunch menu
@@ -4057,42 +3970,9 @@ function si_set_default_menu_values() {
         set_theme_mod($key, $value);
     }
     
-    // Mark as set so we don't overwrite user changes
+    // Mark as set
     update_option('si_default_menus_set', true);
 }
 add_action('after_switch_theme', 'si_set_default_menu_values');
 
-/**
- * Reset the written menu defaults for testing purposes
- */
-function si_reset_menu_defaults() {
-    // Check if user has permission
-    if (!current_user_can('manage_options')) {
-        return;
-    }
-    
-    // Delete the option to allow the defaults to be set again
-    delete_option('si_default_menus_set');
-    
-    // Call the function to set defaults
-    si_set_default_menu_values();
-    
-    // Redirect back to the customizer
-    wp_redirect(admin_url('customize.php?autofocus[section]=si_menu_display_section'));
-    exit;
-}
-
-/**
- * Add admin menu item to reset menu defaults
- */
-function si_add_reset_menu_defaults_button() {
-    add_submenu_page(
-        'themes.php',
-        __('Reset Menu Defaults', 'sports-illustrated'),
-        __('Reset Menu Defaults', 'sports-illustrated'),
-        'manage_options',
-        'si-reset-menu-defaults',
-        'si_reset_menu_defaults'
-    );
-}
-add_action('admin_menu', 'si_add_reset_menu_defaults_button');
+// ... existing code ...

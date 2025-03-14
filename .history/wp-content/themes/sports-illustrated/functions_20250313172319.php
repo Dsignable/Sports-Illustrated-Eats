@@ -3450,14 +3450,7 @@ function si_menu_display_type_customizer($wp_customize) {
             'description' => sprintf(__('Select an image for the %s.', 'sports-illustrated'), $menu_name),
             'section'  => 'si_menu_display_section',
             'mime_type' => 'image',
-            'active_callback' => function() use ($menu_id) {
-                // Always show Happy Hour and daily menus regardless of display type
-                if (in_array($menu_id, array('happy', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))) {
-                    return true;
-                }
-                // For other menus, only show when image display type is selected
-                return get_theme_mod('si_menu_display_type', 'image') === 'image';
-            },
+            // Always show image controls regardless of display type
         )));
 
         // Menu PDF
@@ -3471,60 +3464,51 @@ function si_menu_display_type_customizer($wp_customize) {
             'description' => sprintf(__('Select a PDF file for the %s.', 'sports-illustrated'), $menu_name),
             'section'  => 'si_menu_display_section',
             'mime_type' => 'application/pdf',
-            'active_callback' => function() use ($menu_id) {
-                // Always show Happy Hour and daily menus regardless of display type
-                if (in_array($menu_id, array('happy', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))) {
-                    return true;
-                }
-                // For other menus, only show when image display type is selected
-                return get_theme_mod('si_menu_display_type', 'image') === 'image';
-            },
+            // Always show PDF controls regardless of display type
         )));
 
-        // Only add size multipliers for Happy Hour and daily menus
-        if (in_array($menu_id, array('happy', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))) {
-            // Desktop Size Multiplier
-            $wp_customize->add_setting('si_menu_' . $menu_id . '_size_multiplier', array(
-                'default'           => '1',
-                'sanitize_callback' => 'sanitize_text_field',
-            ));
+        // Add size multipliers for all menu types
+        // Desktop Size Multiplier
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_size_multiplier', array(
+            'default'           => '1',
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
 
-            $wp_customize->add_control('si_menu_' . $menu_id . '_size_multiplier', array(
-                'label'    => $menu_name . ' Size (Desktop)',
-                'description' => sprintf(__('Adjust the size of the %s on desktop devices.', 'sports-illustrated'), $menu_name),
-                'section'  => 'si_menu_display_section',
-                'type'     => 'select',
-                'choices'  => $size_options,
-            ));
+        $wp_customize->add_control('si_menu_' . $menu_id . '_size_multiplier', array(
+            'label'    => $menu_name . ' Size (Desktop)',
+            'description' => sprintf(__('Adjust the size of the %s on desktop devices.', 'sports-illustrated'), $menu_name),
+            'section'  => 'si_menu_display_section',
+            'type'     => 'select',
+            'choices'  => $size_options,
+        ));
 
-            // Tablet Size Multiplier
-            $wp_customize->add_setting('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
-                'default'           => '1.5',
-                'sanitize_callback' => 'sanitize_text_field',
-            ));
+        // Tablet Size Multiplier
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
+            'default'           => '1.5',
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
 
-            $wp_customize->add_control('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
-                'label'    => $menu_name . ' Size (Tablet)',
-                'description' => sprintf(__('Adjust the size of the %s on tablet devices.', 'sports-illustrated'), $menu_name),
-                'section'  => 'si_menu_display_section',
-                'type'     => 'select',
-                'choices'  => $size_options,
-            ));
+        $wp_customize->add_control('si_menu_' . $menu_id . '_tablet_size_multiplier', array(
+            'label'    => $menu_name . ' Size (Tablet)',
+            'description' => sprintf(__('Adjust the size of the %s on tablet devices.', 'sports-illustrated'), $menu_name),
+            'section'  => 'si_menu_display_section',
+            'type'     => 'select',
+            'choices'  => $size_options,
+        ));
 
-            // Mobile Size Multiplier
-            $wp_customize->add_setting('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
-                'default'           => '2',
-                'sanitize_callback' => 'sanitize_text_field',
-            ));
+        // Mobile Size Multiplier
+        $wp_customize->add_setting('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
+            'default'           => '2',
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
 
-            $wp_customize->add_control('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
-                'label'    => $menu_name . ' Size (Mobile)',
-                'description' => sprintf(__('Adjust the size of the %s on mobile devices.', 'sports-illustrated'), $menu_name),
-                'section'  => 'si_menu_display_section',
-                'type'     => 'select',
-                'choices'  => $size_options,
-            ));
-        }
+        $wp_customize->add_control('si_menu_' . $menu_id . '_mobile_size_multiplier', array(
+            'label'    => $menu_name . ' Size (Mobile)',
+            'description' => sprintf(__('Adjust the size of the %s on mobile devices.', 'sports-illustrated'), $menu_name),
+            'section'  => 'si_menu_display_section',
+            'type'     => 'select',
+            'choices'  => $size_options,
+        ));
     }
     
     // Written Menu Settings
@@ -3700,293 +3684,84 @@ function si_set_default_menu_values() {
     
     // Brunch Menu Defaults
     $brunch_defaults = array(
-        'si_written_menu_brunch_title' => 'BRUNCH MENU',
-        'si_written_menu_brunch_description' => 'Served 10 AM - 2 PM',
+        'si_written_menu_brunch_title' => 'Brunch Menu',
+        'si_written_menu_brunch_description' => 'Served 10am - 2pm Saturday & Sunday',
         
-        // Breakfast Plates Section
-        'si_written_menu_brunch_section_1_title' => 'Breakfast Plates',
-        'si_written_menu_brunch_section_1_description' => '',
+        // Classic Breakfast Section
+        'si_written_menu_brunch_section_1_title' => 'Breakfast Classics',
+        'si_written_menu_brunch_section_1_description' => 'All breakfast classics served with your choice of side.',
         
         'si_written_menu_brunch_section_1_item_1_name' => 'Classic Breakfast',
-        'si_written_menu_brunch_section_1_item_1_description' => 'Two eggs any style, broiled tomato, herb fried potatoes<br>Choice of: Double Smoked Bacon | Apple Bangers | Avocado<br>Choice of: Sourdough Texas | Clubhouse Multigrain Toast',
+        'si_written_menu_brunch_section_1_item_1_description' => 'Two Eggs Any Style, Broiled Tomato, Herb Fried Potatoes. Choice of: Double Smoked Bacon | Apple Bangers | Avocado. Choice of: Sourdough Texas |CLUBHOUSE Multigrain Toast',
         'si_written_menu_brunch_section_1_item_1_price' => '18',
+        'si_written_menu_brunch_section_1_item_1_notes' => 'V',
         
         'si_written_menu_brunch_section_1_item_2_name' => 'Lumberjack Breakfast',
-        'si_written_menu_brunch_section_1_item_2_description' => 'Two eggs any style, pancake short stack, apple bangers, double smoked bacon, herb fried potatoes<br>Choice of: Sourdough Texas | Clubhouse Multigrain Toast',
+        'si_written_menu_brunch_section_1_item_2_description' => 'Two Eggs Any Style, Pancake Short Stack, Apple Bangers, Double Smoked Bacon, Herb Fried Potatoes. Choice of: Sourdough Texas |CLUBHOUSE Multigrain Toast',
         'si_written_menu_brunch_section_1_item_2_price' => '23',
         
         'si_written_menu_brunch_section_1_item_3_name' => 'Away Game Breakfast Sandwich',
-        'si_written_menu_brunch_section_1_item_3_description' => 'Two over medium eggs, American cheese, double smoked bacon, Roma tomato, rocket, garlic chive aioli, herb fried potatoes',
-        'si_written_menu_brunch_section_1_item_3_price' => '19.5',
+        'si_written_menu_brunch_section_1_item_3_description' => 'Two Over Medium Eggs, American Cheese, Double Smoked Bacon, Roma Tomato, Rocket, Garlic Chive Aioli, Herb Fried Potatoes',
+        'si_written_menu_brunch_section_1_item_3_price' => '19½',
         
-        // Eggs Benedict Section
-        'si_written_menu_brunch_section_2_title' => 'Eggs Benedict',
-        'si_written_menu_brunch_section_2_description' => 'Housemade biscuits, 2 poached eggs, hollandaise, herb fried potatoes',
+        // Brunch Specialties Section
+        'si_written_menu_brunch_section_2_title' => 'Brunch Specialties',
+        'si_written_menu_brunch_section_2_description' => 'Our chef\'s special creations for brunch.',
         
-        'si_written_menu_brunch_section_2_item_1_name' => 'Fried Chicken',
-        'si_written_menu_brunch_section_2_item_1_description' => 'Nashville Fried Chicken',
-        'si_written_menu_brunch_section_2_item_1_price' => '22.5',
+        'si_written_menu_brunch_section_2_item_1_name' => 'Avocado Toast',
+        'si_written_menu_brunch_section_2_item_1_description' => 'Smashed Avocado, Poached Eggs, Cherry Tomatoes, Microgreens, Multigrain Toast',
+        'si_written_menu_brunch_section_2_item_1_price' => '16',
+        'si_written_menu_brunch_section_2_item_1_notes' => 'V',
         
-        'si_written_menu_brunch_section_2_item_2_name' => 'The OG',
-        'si_written_menu_brunch_section_2_item_2_description' => 'Canadian Bacon',
-        'si_written_menu_brunch_section_2_item_2_price' => '20',
-        
-        'si_written_menu_brunch_section_2_item_3_name' => 'Tom Avo',
-        'si_written_menu_brunch_section_2_item_3_description' => 'Avocado, Grilled Roma Tomato',
-        'si_written_menu_brunch_section_2_item_3_price' => '19.5',
-        
-        // Breakfast Poutine Section
-        'si_written_menu_brunch_section_3_title' => 'Breakfast Poutine',
-        'si_written_menu_brunch_section_3_description' => '2 poached eggs, hollandaise, cheese curds, herb fried potatoes, arugula, cilantro',
-        
-        'si_written_menu_brunch_section_3_item_1_name' => 'Pulled Pork',
-        'si_written_menu_brunch_section_3_item_1_description' => 'Citrus Braised Pulled Pork',
-        'si_written_menu_brunch_section_3_item_1_price' => '22',
-        
-        'si_written_menu_brunch_section_3_item_2_name' => 'Bacon & Egg',
-        'si_written_menu_brunch_section_3_item_2_description' => 'Double Smoked Bacon',
-        'si_written_menu_brunch_section_3_item_2_price' => '19.5',
-        
-        'si_written_menu_brunch_section_3_item_3_name' => 'SoCal',
-        'si_written_menu_brunch_section_3_item_3_description' => 'Hass Avocado, Heirloom Tomato',
-        'si_written_menu_brunch_section_3_item_3_price' => '19.5',
-        
-        // Signatures Section
-        'si_written_menu_brunch_section_4_title' => 'Signatures',
-        'si_written_menu_brunch_section_4_description' => '',
-        
-        'si_written_menu_brunch_section_4_item_1_name' => 'This French Toast',
-        'si_written_menu_brunch_section_4_item_1_description' => 'Buttermilk fried chicken, French toast, chili maple syrup, bread & butter pickles, scallions, hot chilies',
-        'si_written_menu_brunch_section_4_item_1_price' => '23',
-        
-        'si_written_menu_brunch_section_4_item_2_name' => 'Banana Pecan Stack',
-        'si_written_menu_brunch_section_4_item_2_description' => 'Chef Tiffany\'s buttermilk pancakes, caramelized bananas, maple syrup, toasted pecans, whipped cinnamon butter',
-        'si_written_menu_brunch_section_4_item_2_price' => '23',
-        
-        // Kids Breakfast Section
-        'si_written_menu_brunch_section_5_title' => 'Kids Breakfast',
-        'si_written_menu_brunch_section_5_description' => '',
-        
-        'si_written_menu_brunch_section_5_item_1_name' => 'Pancakes',
-        'si_written_menu_brunch_section_5_item_1_description' => 'Two pancakes, maple syrup, blueberry compote',
-        'si_written_menu_brunch_section_5_item_1_price' => '12',
-        
-        'si_written_menu_brunch_section_5_item_2_name' => 'Bacon and Eggs',
-        'si_written_menu_brunch_section_5_item_2_description' => 'Two eggs, 1 slice of bacon, potato wedges',
-        'si_written_menu_brunch_section_5_item_2_price' => '12',
-        
-        // K.O. Treat Section
-        'si_written_menu_brunch_section_6_title' => 'K.O. Treat',
-        'si_written_menu_brunch_section_6_description' => '',
-        
-        'si_written_menu_brunch_section_6_item_1_name' => 'French Toast Bites',
-        'si_written_menu_brunch_section_6_item_1_description' => 'Sweet Hawaiian roll French toast, Nutella, cinnamon chili sugar',
-        'si_written_menu_brunch_section_6_item_1_price' => '10',
-        
-        // Bench Warmers Section
-        'si_written_menu_brunch_section_7_title' => 'Bench Warmers (Add-ons)',
-        'si_written_menu_brunch_section_7_description' => '',
-        
-        'si_written_menu_brunch_section_7_item_1_name' => 'Herb Fried Potatoes',
-        'si_written_menu_brunch_section_7_item_1_price' => '7',
-        
-        'si_written_menu_brunch_section_7_item_2_name' => 'Apple Bangers',
-        'si_written_menu_brunch_section_7_item_2_price' => '5',
-        
-        'si_written_menu_brunch_section_7_item_3_name' => 'Canadian Bacon',
-        'si_written_menu_brunch_section_7_item_3_price' => '5',
-        
-        'si_written_menu_brunch_section_7_item_4_name' => 'Double Smoked Bacon',
-        'si_written_menu_brunch_section_7_item_4_price' => '5',
-        
-        'si_written_menu_brunch_section_7_item_5_name' => 'Toast',
-        'si_written_menu_brunch_section_7_item_5_price' => '4',
-        
-        'si_written_menu_brunch_section_7_item_6_name' => 'Hass Avocado',
-        'si_written_menu_brunch_section_7_item_6_price' => '3',
+        'si_written_menu_brunch_section_2_item_2_name' => 'Chicken & Waffles',
+        'si_written_menu_brunch_section_2_item_2_description' => 'Crispy Fried Chicken, Belgian Waffle, Maple Syrup, Whipped Butter',
+        'si_written_menu_brunch_section_2_item_2_price' => '21',
     );
     
     // Drinks Menu Defaults
     $drinks_defaults = array(
-        'si_written_menu_drinks_title' => 'DRINKS MENU',
-        'si_written_menu_drinks_description' => '',
-        
-        // Wine Section
-        'si_written_menu_drinks_section_1_title' => 'Wine',
-        'si_written_menu_drinks_section_1_description' => '',
-        
-        // White Wine Subsection
-        'si_written_menu_drinks_section_1_item_1_name' => 'White',
-        'si_written_menu_drinks_section_1_item_1_description' => '',
-        'si_written_menu_drinks_section_1_item_1_price' => '',
-        
-        'si_written_menu_drinks_section_1_item_2_name' => 'Peller Estate Chardonnay',
-        'si_written_menu_drinks_section_1_item_2_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_2_price' => '9/12/32',
-        
-        'si_written_menu_drinks_section_1_item_3_name' => 'Red Rooster Pinot Gris',
-        'si_written_menu_drinks_section_1_item_3_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_3_price' => '11/15/35',
-        
-        'si_written_menu_drinks_section_1_item_4_name' => 'Gray Monk Pinot Blanc',
-        'si_written_menu_drinks_section_1_item_4_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_4_price' => '11/14/38',
-        
-        'si_written_menu_drinks_section_1_item_5_name' => 'Tinhorn Creek Gewurztraminer',
-        'si_written_menu_drinks_section_1_item_5_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_5_price' => '12/17/44',
-        
-        'si_written_menu_drinks_section_1_item_6_name' => 'Blasted Church Hatfield\'s Fuse Blend',
-        'si_written_menu_drinks_section_1_item_6_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_6_price' => '13/18/45',
-        
-        'si_written_menu_drinks_section_1_item_7_name' => 'Oyster Bay Sauvignon Blanc',
-        'si_written_menu_drinks_section_1_item_7_description' => 'New Zealand',
-        'si_written_menu_drinks_section_1_item_7_price' => '14/19/49',
-        
-        // Rosé Subsection
-        'si_written_menu_drinks_section_1_item_8_name' => 'Rosé',
-        'si_written_menu_drinks_section_1_item_8_description' => '',
-        'si_written_menu_drinks_section_1_item_8_price' => '',
-        
-        'si_written_menu_drinks_section_1_item_9_name' => 'Gray Monk Latitude 50',
-        'si_written_menu_drinks_section_1_item_9_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_9_price' => '11/14/38',
-        
-        'si_written_menu_drinks_section_1_item_10_name' => 'Dirty Laundry Hush',
-        'si_written_menu_drinks_section_1_item_10_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_10_price' => '13/18/45',
-        
-        // Red Wine Subsection
-        'si_written_menu_drinks_section_1_item_11_name' => 'Red',
-        'si_written_menu_drinks_section_1_item_11_description' => '',
-        'si_written_menu_drinks_section_1_item_11_price' => '',
-        
-        'si_written_menu_drinks_section_1_item_12_name' => 'Peller Estate Cabernet Merlot',
-        'si_written_menu_drinks_section_1_item_12_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_12_price' => '9/12/32',
-        
-        'si_written_menu_drinks_section_1_item_13_name' => 'Masi Corvina Malbec',
-        'si_written_menu_drinks_section_1_item_13_description' => 'Argentina',
-        'si_written_menu_drinks_section_1_item_13_price' => '11/14/40',
-        
-        'si_written_menu_drinks_section_1_item_14_name' => 'Red Rooster Cabernet Merlot',
-        'si_written_menu_drinks_section_1_item_14_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_1_item_14_price' => '12/17/44',
-        
-        'si_written_menu_drinks_section_1_item_15_name' => 'Oyster Bay Merlot',
-        'si_written_menu_drinks_section_1_item_15_description' => 'New Zealand',
-        'si_written_menu_drinks_section_1_item_15_price' => '14/19/52',
-        
-        // More Red Wines and Bubbles
-        'si_written_menu_drinks_section_2_title' => 'More Wines',
-        'si_written_menu_drinks_section_2_description' => '',
-        
-        'si_written_menu_drinks_section_2_item_1_name' => 'Blasted Church Big Bang Theory Blend',
-        'si_written_menu_drinks_section_2_item_1_description' => 'Okanagan, Canada',
-        'si_written_menu_drinks_section_2_item_1_price' => '15/20/55',
-        
-        'si_written_menu_drinks_section_2_item_2_name' => 'Oyster Bay Pinot Noir',
-        'si_written_menu_drinks_section_2_item_2_description' => 'New Zealand',
-        'si_written_menu_drinks_section_2_item_2_price' => '15/20/55',
-        
-        'si_written_menu_drinks_section_2_item_3_name' => 'Bubbles',
-        'si_written_menu_drinks_section_2_item_3_description' => '',
-        'si_written_menu_drinks_section_2_item_3_price' => '',
-        
-        'si_written_menu_drinks_section_2_item_4_name' => 'Masi Modello Prosecco DOC',
-        'si_written_menu_drinks_section_2_item_4_description' => 'Veneto, Italy',
-        'si_written_menu_drinks_section_2_item_4_price' => '11/39',
-        
-        // Cocktails Section
-        'si_written_menu_drinks_section_3_title' => 'Cocktails',
-        'si_written_menu_drinks_section_3_description' => '',
-        
-        // Classics Subsection
-        'si_written_menu_drinks_section_3_item_1_name' => 'Classics',
-        'si_written_menu_drinks_section_3_item_1_description' => '',
-        'si_written_menu_drinks_section_3_item_1_price' => '',
-        
-        'si_written_menu_drinks_section_3_item_2_name' => 'Shaft',
-        'si_written_menu_drinks_section_3_item_2_description' => 'Vodka, Bailey\'s, Kahlua, cold brew coffee',
-        'si_written_menu_drinks_section_3_item_2_price' => '8',
-        
-        'si_written_menu_drinks_section_3_item_3_name' => 'Aperol Spritz',
-        'si_written_menu_drinks_section_3_item_3_description' => 'Aperol, prosecco, topped with club soda',
-        'si_written_menu_drinks_section_3_item_3_price' => '12',
-        
-        'si_written_menu_drinks_section_3_item_4_name' => 'Ranch Water',
-        'si_written_menu_drinks_section_3_item_4_description' => 'Tequila blanco, lime juice, topped with sparkling water',
-        'si_written_menu_drinks_section_3_item_4_price' => '12',
-        
-        'si_written_menu_drinks_section_3_item_5_name' => 'Moscow Mule',
-        'si_written_menu_drinks_section_3_item_5_description' => 'Ketel One vodka, lime juice, topped with ginger beer',
-        'si_written_menu_drinks_section_3_item_5_price' => '12.5',
-        
-        'si_written_menu_drinks_section_3_item_6_name' => 'Gin Basil Smash',
-        'si_written_menu_drinks_section_3_item_6_description' => 'Empress elderflower rose gin, basil, lime juice, simple syrup',
-        'si_written_menu_drinks_section_3_item_6_price' => '13',
-        
-        'si_written_menu_drinks_section_3_item_7_name' => 'Negroni',
-        'si_written_menu_drinks_section_3_item_7_description' => 'Gin, Campari, sweet vermouth',
-        'si_written_menu_drinks_section_3_item_7_price' => '14',
-        
-        'si_written_menu_drinks_section_3_item_8_name' => 'Old Fashioned',
-        'si_written_menu_drinks_section_3_item_8_description' => 'Buffalo Trace, orange bitters',
-        'si_written_menu_drinks_section_3_item_8_price' => '14.5',
-        
-        // Signature Cocktails
-        'si_written_menu_drinks_section_4_title' => 'Signature Cocktails',
-        'si_written_menu_drinks_section_4_description' => '',
-        
-        'si_written_menu_drinks_section_4_item_1_name' => 'Espresso Martini',
-        'si_written_menu_drinks_section_4_item_1_description' => 'Vodka, Kahlua, Bailey\'s, cold brew coffee, cream, toasted marshmallow',
-        'si_written_menu_drinks_section_4_item_1_price' => '14',
-        
-        'si_written_menu_drinks_section_4_item_2_name' => 'Spicy Mango Margarita',
-        'si_written_menu_drinks_section_4_item_2_description' => 'Blanco tequila, triple sec, passionfruit juice, mango purée, jalapeño chili syrup',
-        'si_written_menu_drinks_section_4_item_2_price' => '13',
-        
-        'si_written_menu_drinks_section_4_item_3_name' => 'Caribbean Ripple',
-        'si_written_menu_drinks_section_4_item_3_description' => 'White rum, butter ripple, pineapple juice',
-        'si_written_menu_drinks_section_4_item_3_price' => '13',
-        
-        'si_written_menu_drinks_section_4_item_4_name' => 'Sex on the Peach',
-        'si_written_menu_drinks_section_4_item_4_description' => 'Vodka, peach schnapps, peach syrup, lemon juice, fuzzy peach garnish',
-        'si_written_menu_drinks_section_4_item_4_price' => '13',
-        
-        'si_written_menu_drinks_section_4_item_5_name' => 'Rose Gin Sour',
-        'si_written_menu_drinks_section_4_item_5_description' => 'Empress rose gin, St. Germaine, elderflower, lemon juice, rosemary syrup',
-        'si_written_menu_drinks_section_4_item_5_price' => '14',
-        
-        'si_written_menu_drinks_section_4_item_6_name' => 'Empress Gin Bloom',
-        'si_written_menu_drinks_section_4_item_6_description' => 'Empress gin, rosemary syrup, Fentiman\'s grapefruit tonic water',
-        'si_written_menu_drinks_section_4_item_6_price' => '14',
+        'si_written_menu_drinks_title' => 'Drinks Menu',
+        'si_written_menu_drinks_description' => 'Craft beers, signature cocktails, and fine wines',
         
         // On Tap Section
-        'si_written_menu_drinks_section_5_title' => 'On Tap',
-        'si_written_menu_drinks_section_5_description' => '',
+        'si_written_menu_drinks_section_1_title' => 'On Tap',
+        'si_written_menu_drinks_section_1_description' => 'All draft beers available in 16oz pours or pitchers',
         
-        // Domestic Beers Subsection
-        'si_written_menu_drinks_section_5_item_1_name' => 'Domestic Beers',
-        'si_written_menu_drinks_section_5_item_1_description' => '',
-        'si_written_menu_drinks_section_5_item_1_price' => '',
+        // Domestic Subsection
+        'si_written_menu_drinks_section_1_item_1_name' => 'Domestic',
+        'si_written_menu_drinks_section_1_item_1_description' => 'ABV | 16oz | Pitcher',
         
-        'si_written_menu_drinks_section_5_item_2_name' => 'Thunder Beer Lager',
-        'si_written_menu_drinks_section_5_item_2_description' => 'White Rock Beach',
-        'si_written_menu_drinks_section_5_item_2_price' => '5% | 8 / 25',
+        'si_written_menu_drinks_section_1_item_2_name' => 'Thunder Beer',
+        'si_written_menu_drinks_section_1_item_2_description' => 'White Rock Beach Brewing',
+        'si_written_menu_drinks_section_1_item_2_price' => '5% | 8 | 25',
         
-        'si_written_menu_drinks_section_5_item_3_name' => 'Landschark Lager',
-        'si_written_menu_drinks_section_5_item_3_description' => '',
-        'si_written_menu_drinks_section_5_item_3_price' => '4.6% | 8 / 25',
+        'si_written_menu_drinks_section_1_item_3_name' => 'Slam Dunk IPA',
+        'si_written_menu_drinks_section_1_item_3_description' => 'Hometown Brewing Co.',
+        'si_written_menu_drinks_section_1_item_3_price' => '6.5% | 9 | 28',
         
-        'si_written_menu_drinks_section_5_item_4_name' => 'Tilt Lager',
-        'si_written_menu_drinks_section_5_item_4_description' => 'Phillips',
-        'si_written_menu_drinks_section_5_item_4_price' => '5% | 8 / 25',
+        // Cocktails Section
+        'si_written_menu_drinks_section_2_title' => 'Signature Cocktails',
+        'si_written_menu_drinks_section_2_description' => 'Handcrafted by our expert mixologists',
         
-        'si_written_menu_drinks_section_5_item_5_name' => 'Premium Lager Series',
-        'si_written_menu_drinks_section_5_item_5_description' => 'Barnside',
-        'si_written_menu_drinks_section_5_item_5_price' => '5.4% | 8 / 25',
+        'si_written_menu_drinks_section_2_item_1_name' => 'The MVP',
+        'si_written_menu_drinks_section_2_item_1_description' => 'Bourbon, Maple Syrup, Bitters, Orange Peel',
+        'si_written_menu_drinks_section_2_item_1_price' => '14',
+        
+        'si_written_menu_drinks_section_2_item_2_name' => 'Buzzer Beater',
+        'si_written_menu_drinks_section_2_item_2_description' => 'Tequila, Lime, Agave, Jalapeño',
+        'si_written_menu_drinks_section_2_item_2_price' => '15',
+        
+        // Wine Section
+        'si_written_menu_drinks_section_3_title' => 'Wine Selection',
+        'si_written_menu_drinks_section_3_description' => 'Available by the glass or bottle',
+        
+        'si_written_menu_drinks_section_3_item_1_name' => 'House Red',
+        'si_written_menu_drinks_section_3_item_1_description' => 'Cabernet Sauvignon, California',
+        'si_written_menu_drinks_section_3_item_1_price' => '10 | 38',
+        
+        'si_written_menu_drinks_section_3_item_2_name' => 'House White',
+        'si_written_menu_drinks_section_3_item_2_description' => 'Chardonnay, California',
+        'si_written_menu_drinks_section_3_item_2_price' => '10 | 38',
     );
     
     // Full Menu Defaults

@@ -62,35 +62,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
         margin-bottom: 40px;
-        position: relative;
-    }
-    
-    .menu-pdf-download {
-        text-align: center;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eaeaea;
-    }
-    
-    .download-btn {
-        display: inline-flex;
-        align-items: center;
-        background-color: #e63946;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-    }
-    
-    .download-btn:hover {
-        background-color: #c1121f;
-        color: white;
-    }
-    
-    .download-btn .dashicons {
-        margin-right: 8px;
     }
     
     .written-menu-header {
@@ -105,7 +76,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         margin-bottom: 10px;
         text-transform: uppercase;
         font-weight: 700;
-        color: #333;
     }
     
     .written-menu-description {
@@ -125,14 +95,12 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         font-weight: 600;
         border-bottom: 1px solid #eaeaea;
         padding-bottom: 10px;
-        color: #e63946;
     }
     
     .section-description {
         font-size: 16px;
         color: #666;
         margin-bottom: 20px;
-        font-style: italic;
     }
     
     .menu-items {
@@ -143,13 +111,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     
     .menu-item {
         margin-bottom: 20px;
-        padding: 15px;
-        border-radius: 6px;
-        transition: background-color 0.3s ease;
-    }
-    
-    .menu-item:hover {
-        background-color: #f8f9fa;
     }
     
     .item-header {
@@ -157,21 +118,18 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 8px;
-        border-bottom: 1px dashed #ddd;
-        padding-bottom: 8px;
     }
     
     .item-name {
         font-size: 18px;
         font-weight: 600;
         margin: 0;
-        color: #333;
     }
     
     .item-price {
         font-size: 18px;
         font-weight: 600;
-        color: #e63946;
+        color: #333;
     }
     
     .item-description {
@@ -185,11 +143,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         font-size: 12px;
         color: #999;
         font-style: italic;
-        display: inline-block;
-        background-color: #f8f9fa;
-        padding: 2px 6px;
-        border-radius: 3px;
-        margin-top: 5px;
     }
     
     /* Responsive styles for written menus */
@@ -208,14 +161,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         
         .section-title {
             font-size: 20px;
-        }
-        
-        .menu-pdf-download {
-            position: relative;
-            top: 0;
-            right: 0;
-            text-align: center;
-            margin-bottom: 20px;
         }
     }
     
@@ -317,10 +262,8 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                     $is_active = ($active_menu === $menu_type);
                     $is_written_menu = in_array($menu_type, $written_menu_types);
                     
-                    // For written menus (full, drink, brunch)
+                    // For all menus when written display type is selected
                     if ($is_written_menu) :
-                        // Get PDF URL for download button
-                        $menu_pdf = wp_get_attachment_url(get_theme_mod('si_restaurant_menu_' . $menu_type . '_pdf'));
                 ?>
                     <div class="written-menu-wrapper <?php echo $is_active ? 'active' : ''; ?>" 
                          data-menu="<?php echo esc_attr($menu_type); ?>" 
@@ -329,22 +272,22 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                         // Include the written menu template part with the menu type
                         // Convert 'drink' to 'drinks' for template part
                         $template_menu_type = ($menu_type === 'drink') ? 'drinks' : $menu_type;
-                        get_template_part('template-parts/content', 'written-menu', array(
-                            'menu_type' => $template_menu_type,
-                            'menu_pdf' => $menu_pdf
-                        )); 
+                        get_template_part('template-parts/content', 'written-menu', array('menu_type' => $template_menu_type)); 
+                        
+                        // Add PDF download button if available
+                        $menu_pdf = wp_get_attachment_url(get_theme_mod('si_restaurant_menu_' . $menu_type . '_pdf'));
+                        if ($menu_pdf) : 
                         ?>
+                        <div class="menu-pdf-download">
+                            <a href="<?php echo esc_url($menu_pdf); ?>" target="_blank" class="download-btn">
+                                <span class="dashicons dashicons-pdf"></span> Download PDF
+                            </a>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 <?php 
-                    endif;
-                endforeach; 
-                
-                // For image-based menus (happy hour, today's menu)
-                foreach ($menu_types as $menu_type => $menu_label) :
-                    $is_active = ($active_menu === $menu_type);
-                    $is_image_menu = !in_array($menu_type, $written_menu_types);
-                    
-                    if ($is_image_menu) :
+                    else : 
+                        // For image-based menus (happy hour, today's menu)
                         if ($menu_type === 'happy') :
                             $menu_image = si_get_image_url('si_menu_happy_image', get_theme_file_uri('assets/images/menus/happy-hour.jpg'));
                             $menu_pdf = wp_get_attachment_url(get_theme_mod('si_restaurant_menu_happy_pdf'));

@@ -209,14 +209,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         .section-title {
             font-size: 20px;
         }
-        
-        .menu-pdf-download {
-            position: relative;
-            top: 0;
-            right: 0;
-            text-align: center;
-            margin-bottom: 20px;
-        }
     }
     
     <?php
@@ -329,11 +321,15 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                         // Include the written menu template part with the menu type
                         // Convert 'drink' to 'drinks' for template part
                         $template_menu_type = ($menu_type === 'drink') ? 'drinks' : $menu_type;
-                        get_template_part('template-parts/content', 'written-menu', array(
-                            'menu_type' => $template_menu_type,
-                            'menu_pdf' => $menu_pdf
-                        )); 
+                        get_template_part('template-parts/content', 'written-menu', array('menu_type' => $template_menu_type)); 
                         ?>
+                        <?php if ($menu_pdf) : ?>
+                        <div class="menu-pdf-download">
+                            <a href="<?php echo esc_url($menu_pdf); ?>" target="_blank" class="download-btn">
+                                <span class="dashicons dashicons-pdf"></span> Download PDF
+                            </a>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 <?php 
                     endif;
