@@ -1,0 +1,108 @@
+/**
+ * Sports Illustrated Menu Manager Styles
+ */
+
+.si-menu-manager {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.si-menu-manager-intro {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #0073aa;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.si-menu-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.si-menu-card {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.si-menu-card:hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.si-menu-card-header {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 15px;
+}
+
+.si-menu-card-header h3 {
+    margin: 0;
+    color: #23282d;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.si-menu-card-body {
+    padding: 15px;
+    min-height: 80px;
+}
+
+.si-menu-card-footer {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+}
+
+.si-menu-card-all {
+    background-color: #f7fcff;
+    border-color: #0073aa;
+}
+
+.si-menu-card-all .si-menu-card-header {
+    background-color: #0073aa;
+    border-color: #006291;
+}
+
+.si-menu-card-all .si-menu-card-header h3 {
+    color: #fff;
+}
+
+.si-menu-card-all .si-menu-card-footer {
+    background-color: #f0f8ff;
+}
+
+.si-menu-reset-response {
+    margin-top: 20px;
+    padding: 15px;
+    border-left: 4px solid #46b450;
+    background-color: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.si-menu-reset-response.error {
+    border-left-color: #dc3232;
+}
+
+@media screen and (max-width: 782px) {
+    .si-menu-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .si-menu-card-footer {
+        flex-direction: column;
+    }
+    
+    .si-menu-card-footer .button {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+} 

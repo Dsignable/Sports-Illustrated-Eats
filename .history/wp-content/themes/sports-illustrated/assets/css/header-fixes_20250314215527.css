@@ -1,0 +1,95 @@
+/* Header fixes for mobile and tablet */
+
+/* Tablet styles (max-width: 991px) */
+@media (max-width: 991px) {
+    .site-header {
+        background: rgba(0, 0, 0, 0.9);
+        height: auto;
+        min-height: 70px;
+    }
+
+    .navigation-bar {
+        grid-template-columns: auto auto;
+        padding: 5px 20px;
+        gap: 15px;
+        height: 60px;
+    }
+
+    .site-logo {
+        order: 2;
+        margin-left: auto;
+        padding-right: 10%;
+    }
+
+    .custom-logo {
+        max-height: 50px;
+    }
+
+    /* Fix dropdown menus */
+    .mobile-menu {
+        display: none;
+        padding-top: 70px; /* Match header height */
+    }
+
+    .mobile-menu.active {
+        display: flex;
+    }
+
+    .mobile-submenu-item {
+        display: none;
+    }
+
+    .menu-item-has-children.active .mobile-submenu-item {
+        display: block;
+    }
+
+    /* Adjust hamburger position */
+    .hamburger {
+        order: 1;
+        margin: 0;
+        padding: 0;
+        height: 20px;
+    }
+
+    .hamburger span {
+        height: 2px;
+    }
+
+    .hamburger span:nth-child(2) {
+        top: 9px;
+    }
+
+    .hamburger span:nth-child(3) {
+        top: 18px;
+    }
+}
+
+/* Mobile styles (max-width: 480px) */
+@media (max-width: 480px) {
+    .site-header {
+        min-height: 60px;
+    }
+
+    .navigation-bar {
+        padding: 5px 15px;
+        height: 50px;
+    }
+
+    .custom-logo {
+        max-height: 40px;
+    }
+
+    .mobile-menu {
+        padding-top: 60px; /* Match header height */
+    }
+
+    .mobile-menu a {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+
+    .mobile-submenu-item {
+        font-size: 16px;
+        padding: 8px 15px 8px 30px;
+    }
+} 

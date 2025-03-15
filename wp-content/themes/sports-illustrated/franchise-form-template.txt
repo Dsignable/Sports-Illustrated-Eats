@@ -1,0 +1,16 @@
+<label>First & Last Name*
+    [text* your-name placeholder "Your Full Name"]</label>
+
+<label>Phone Number*
+    [tel* your-phone placeholder "Your Phone Number"]</label>
+
+<label>Email Address*
+    [email* your-email placeholder "Your Email Address"]</label>
+
+<label>Do you have any experience in restaurant franchising?*
+    [select* franchise-experience include_blank "Yes" "No" "Some Experience"]</label>
+
+<label>Please provide details about your business management and/or ownership experience, including any involvement in the restaurant industry. If applicable, list any franchise brands you have been associated with.*
+    [textarea* business-experience placeholder "Please share your business and restaurant industry experience here..."]</label>
+
+[submit "Submit Application"] 
