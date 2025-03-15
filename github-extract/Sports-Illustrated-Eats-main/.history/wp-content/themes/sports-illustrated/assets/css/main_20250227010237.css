@@ -1,0 +1,221 @@
+/* Font declarations */
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('../fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('../fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* CSS Variables */
+:root {
+    --si-font-primary: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    --si-font-size-base: 20px;
+    --si-letter-spacing: 2px;
+    --si-color-white: #FFFFFF;
+    --si-color-black: #000000;
+    --si-transition: all 0.3s ease;
+}
+
+/* Reset & Base Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--si-font-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--si-color-black);
+    color: var(--si-color-white);
+}
+
+/* Header Styles */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.navigation-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    height: 100px;
+}
+
+/* Logo Styles */
+.site-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.custom-logo-link {
+    display: block;
+    width: 60px;
+    height: 60px;
+}
+
+.custom-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Hero Section Styles */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+.hero-content {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    letter-spacing: var(--si-letter-spacing);
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Navigation Styles */
+.desktop-menu {
+    display: flex;
+    gap: 33px;
+    flex: 1;
+    justify-content: center;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: var(--si-transition);
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    width: 30px;
+    height: 24px;
+    position: relative;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.hamburger span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: var(--si-color-white);
+    transition: var(--si-transition);
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.hamburger span:nth-child(3) { bottom: 0; }
+
+.hamburger.active span:nth-child(1) {
+    top: 50%;
+    transform: rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    bottom: 50%;
+    transform: rotate(-45deg);
+}
+
+/* Media Queries */
+@media (max-width: 991px) {
+    .navigation-bar {
+        padding: 0 20px;
+    }
+
+    .desktop-menu {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .site-logo {
+        position: static;
+        transform: none;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+    }
+} 

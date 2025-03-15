@@ -1,0 +1,338 @@
+/* Font declarations */
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('../fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('../fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* CSS Variables */
+:root {
+    --si-font-primary: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    --si-font-size-base: 20px;
+    --si-letter-spacing: 2px;
+    --si-color-white: #FFFFFF;
+    --si-color-black: #000000;
+    --si-transition: all 0.3s ease;
+    --si-section-height: 100vh;
+    --si-transition-duration: 0.6s;
+}
+
+/* Reset & Base Styles */
+html {
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+    height: 100vh;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: none; /* Prevent bounce on some browsers */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--si-font-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--si-color-black);
+    color: var(--si-color-white);
+    min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Header Styles */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.navigation-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    height: 100px;
+}
+
+/* Logo Styles */
+.site-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.custom-logo-link {
+    display: block;
+    width: 60px;
+    height: 60px;
+}
+
+.custom-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Hero Section Styles */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.hero-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+.hero-content {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    letter-spacing: var(--si-letter-spacing);
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Navigation Styles */
+.desktop-menu {
+    display: flex;
+    gap: 33px;
+    flex: 1;
+    justify-content: center;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: var(--si-transition);
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    width: 30px;
+    height: 24px;
+    position: relative;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.hamburger span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: var(--si-color-white);
+    transition: var(--si-transition);
+}
+
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.hamburger span:nth-child(3) { bottom: 0; }
+
+.hamburger.active span:nth-child(1) {
+    top: 50%;
+    transform: rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    bottom: 50%;
+    transform: rotate(-45deg);
+}
+
+/* Media Queries */
+@media (max-width: 991px) {
+    .navigation-bar {
+        padding: 0 20px;
+    }
+
+    .desktop-menu {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .site-logo {
+        position: static;
+        transform: none;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+    }
+}
+
+/* Menu Section Styles */
+.menu-items {
+    position: relative;
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    padding: 0 15px;
+    align-items: center;
+    gap: 25px;
+    font-family: "Agency FB", var(--si-font-primary);
+    font-size: 40px;
+    color: var(--si-color-white);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 4px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    will-change: opacity, transform;
+}
+
+.menu-items.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.menu-card {
+    align-self: stretch;
+    min-width: 240px;
+    margin: auto 0;
+    min-height: 600px;
+    width: 400px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+}
+
+.menu-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.menu-card-content {
+    position: relative;
+    min-height: 600px;
+    padding: 44px 28px 460px;
+}
+
+.menu-image {
+    aspect-ratio: 0.67;
+    object-fit: cover;
+    object-position: center;
+    width: 400px;
+    border-radius: 15px;
+    position: absolute;
+    z-index: 0;
+    max-width: 100%;
+    right: 0;
+    bottom: 0;
+    height: 600px;
+}
+
+.menu-title {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    z-index: 1;
+    position: relative;
+    margin: 0;
+}
+
+/* Animation Delays for Menu Cards */
+.menu-card:nth-child(1) { transition-delay: 0.2s; }
+.menu-card:nth-child(2) { transition-delay: 0.4s; }
+.menu-card:nth-child(3) { transition-delay: 0.6s; }
+
+@media (max-width: 991px) {
+    .menu-items {
+        padding: 20px;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .menu-card {
+        width: 100%;
+        min-height: 400px;
+    }
+
+    .menu-card-content {
+        min-height: 400px;
+        padding: 44px 20px 300px;
+    }
+
+    .menu-image {
+        width: 100%;
+        height: 400px;
+    }
+} 

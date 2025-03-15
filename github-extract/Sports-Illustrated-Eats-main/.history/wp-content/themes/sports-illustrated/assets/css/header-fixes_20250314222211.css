@@ -1,0 +1,162 @@
+/* Header fixes for mobile and tablet */
+
+/* Common styles */
+.hamburger {
+    cursor: pointer;
+    z-index: 1001;
+    display: none;
+    background: none;
+    border: none;
+    padding: 15px;
+    margin: 0;
+    position: relative;
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #fff;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    padding-top: 80px;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.mobile-menu-inner {
+    padding: 20px;
+}
+
+.mobile-menu a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 15px 20px;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.mobile-menu a:hover {
+    color: #e63422;
+}
+
+.mobile-submenu-item {
+    display: none;
+    padding-left: 20px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.menu-item-has-children.active .mobile-submenu-item {
+    display: block;
+}
+
+/* Tablet styles (max-width: 991px) */
+@media (max-width: 991px) {
+    .site-header {
+        background: rgba(0, 0, 0, 0.9);
+        height: auto;
+        min-height: 70px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        transition: transform 0.3s ease;
+    }
+
+    .site-header.header-hidden {
+        transform: translateY(-100%);
+    }
+
+    .navigation-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        height: 70px;
+        position: relative;
+    }
+
+    .hamburger {
+        display: block;
+        order: 1;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .site-logo {
+        order: 2;
+        margin: 0 auto;
+        position: relative;
+        z-index: 998;
+    }
+
+    .custom-logo {
+        max-height: 50px;
+        width: auto;
+    }
+
+    .desktop-menu {
+        display: none;
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+/* Mobile styles (max-width: 480px) */
+@media (max-width: 480px) {
+    .site-header {
+        min-height: 60px;
+    }
+
+    .navigation-bar {
+        padding: 5px 15px;
+        height: 60px;
+    }
+
+    .custom-logo {
+        max-height: 40px;
+    }
+
+    .mobile-menu {
+        padding-top: 60px;
+    }
+
+    .mobile-menu a {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+
+    .mobile-submenu-item {
+        padding: 10px 20px 10px 30px;
+    }
+}

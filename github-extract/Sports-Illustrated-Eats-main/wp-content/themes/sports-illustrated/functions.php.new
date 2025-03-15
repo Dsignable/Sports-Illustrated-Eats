@@ -1,0 +1,78 @@
+<?php
+/**
+ * Sports Illustrated theme functions and definitions
+ *
+ * @package Sports_Illustrated
+ */
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+// Define theme version
+if (!defined('SI_VERSION')) {
+    define('SI_VERSION', wp_get_theme()->get('Version'));
+}
+
+// Enable debugging
+if (!defined('WP_DEBUG')) {
+    define('WP_DEBUG', true);
+}
+if (!defined('WP_DEBUG_LOG')) {
+    define('WP_DEBUG_LOG', true);
+}
+
+// Include modular theme functions
+require_once get_template_directory() . '/inc/theme-functions.php';
+
+// Add this new function to debug script loading
+function si_debug_scripts() {
+    global $wp_scripts;
+    error_log('=== Enqueued Scripts ===');
+    foreach ($wp_scripts->queue as $handle) {
+        error_log("Script: $handle - Source: " . $wp_scripts->registered[$handle]->src);
+    }
+    error_log('=====================');
+}
+add_action('wp_print_scripts', 'si_debug_scripts', 99);
+
+/**
+ * Add featured image column to posts admin screen
+ */
+function si_add_thumbnail_column($columns) {
+    $new_columns = array();
+    foreach ($columns as $key => $value) {
+        if ($key === 'title') {
+            $new_columns[$key] = $value;
+            $new_columns['thumbnail'] = __('Featured Image', 'sports-illustrated');
+        } else {
+            $new_columns[$key] = $value;
+        }
+    }
+    return $new_columns;
+}
+add_filter('manage_posts_columns', 'si_add_thumbnail_column');
+add_filter('manage_pages_columns', 'si_add_thumbnail_column');
+
+/**
+ * Display featured image in the posts admin column
+ */
+function si_display_thumbnail_column($column_name, $post_id) {
+    if ($column_name === 'thumbnail') {
+        if (has_post_thumbnail($post_id)) {
+            $thumbnail_id = get_post_thumbnail_id($post_id);
+            $thumbnail = wp_get_attachment_image_src($thumbnail_id, 'thumbnail');
+            echo '<img src="' . esc_url($thumbnail[0]) . '" alt="' . esc_attr(get_the_title($post_id)) . '" />';
+        } else {
+            echo '<div class="no-thumbnail"></div>';
+        }
+    }
+}
+add_action('manage_posts_custom_column', 'si_display_thumbnail_column', 10, 2);
+add_action('manage_pages_custom_column', 'si_display_thumbnail_column', 10, 2);
+
+/**
+ * Any custom functions that aren't yet modularized can be added below
+ */
+
+// Add any custom functions here that haven't been moved to modular files yet 

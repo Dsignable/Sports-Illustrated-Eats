@@ -1,0 +1,31 @@
+<!-- wp:group {"tagName":"header","className":"hero-section","layout":{"type":"default"}} -->
+<header class="wp-block-group hero-section">
+    <!-- wp:cover {"dimRatio":0,"overlayColor":"background","minHeight":100,"minHeightUnit":"vh","isDark":false,"style":{"position":{"all":"fixed"}}} -->
+    <div class="wp-block-cover is-light" style="min-height:100vh">
+        <img 
+            class="wp-block-cover__image-background hero-background" 
+            alt="Background image" 
+            src="<?php echo esc_url(get_theme_file_uri('assets/images/hero-background.jpg')); ?>" 
+            data-object-fit="cover"
+        />
+        <div class="wp-block-cover__inner-container">
+            <div class="wp-block-group navigation-bar">
+                <div class="wp-block-button nav-button"><a class="wp-block-button__link wp-element-button" href="#menu">MENU</a></div>
+
+                <div class="wp-block-button nav-button"><a class="wp-block-button__link wp-element-button" href="#book">BOOK NOW</a></div>
+
+                <div class="wp-block-button nav-button"><a class="wp-block-button__link wp-element-button" href="#order">ORDER ONLINE</a></div>
+
+                <!-- wp:site-logo {"className":"nav-logo","shouldSyncIcon":true} /-->
+
+                <div class="wp-block-button nav-button"><a class="wp-block-button__link wp-element-button" href="#events">PRIVATE EVENTS</a></div>
+                
+                <div class="wp-block-button nav-button"><a class="wp-block-button__link wp-element-button" href="#schedule">SPORTS SCHEDULE</a></div>
+
+                <div class="wp-block-button nav-button"><a class="wp-block-button__link wp-element-button" href="#contact">CONTACT US</a></div>
+            </div>
+        </div>
+    </div>
+    <!-- /wp:cover -->
+</header>
+<!-- /wp:group -->

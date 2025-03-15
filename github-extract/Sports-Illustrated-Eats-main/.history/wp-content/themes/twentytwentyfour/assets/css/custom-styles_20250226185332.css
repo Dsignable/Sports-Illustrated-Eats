@@ -1,0 +1,95 @@
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('../../fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('../../fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 832px;
+    overflow: hidden;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.navigation-bar {
+    position: relative;
+    display: flex;
+    min-height: 117px;
+    width: 100%;
+    padding: 0 50px;
+    align-items: center;
+    gap: 33px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.nav-button {
+    align-self: stretch;
+    border-radius: 100px;
+    margin: auto 0;
+    min-height: 40px;
+    width: 150px;
+    padding: 9px 53px;
+    gap: 10px;
+    white-space: nowrap;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.nav-button:nth-child(2) { padding: 9px 34px; }
+.nav-button:nth-child(3) { padding: 9px 19px 9px 18px; }
+.nav-button:nth-child(5) {
+    padding: 9px 12px 9px 13px;
+    border-radius: 150px;
+}
+.nav-button:nth-child(6) { padding: 9px 4px; }
+.nav-button:nth-child(7) { padding: 9px 29px 9px 28px; }
+
+.nav-logo {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 80px;
+    align-self: stretch;
+    margin: auto 0;
+    flex-shrink: 0;
+}
+
+@media (max-width: 991px) {
+    .navigation-bar {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
+    .nav-button {
+        padding: 9px 20px;
+        white-space: initial;
+    }
+
+    .nav-button:nth-child(2),
+    .nav-button:nth-child(7) {
+        padding: 9px 20px;
+    }
+} 

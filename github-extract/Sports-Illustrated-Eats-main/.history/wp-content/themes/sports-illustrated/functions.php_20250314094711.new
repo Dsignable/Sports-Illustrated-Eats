@@ -1,0 +1,34 @@
+<?php
+/**
+ * Sports Illustrated theme functions and definitions
+ *
+ * @package Sports_Illustrated
+ */
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+// Define theme version
+if (!defined('SI_VERSION')) {
+    define('SI_VERSION', wp_get_theme()->get('Version'));
+}
+
+// Enable debugging
+if (!defined('WP_DEBUG')) {
+    define('WP_DEBUG', true);
+}
+if (!defined('WP_DEBUG_LOG')) {
+    define('WP_DEBUG_LOG', true);
+}
+
+/**
+ * Include all modular theme functions
+ */
+require_once get_template_directory() . '/inc/theme-functions.php';
+
+/**
+ * Any custom functions that aren't yet modularized can be added below
+ */
+
+// Add any custom functions here that haven't been moved to modular files yet 

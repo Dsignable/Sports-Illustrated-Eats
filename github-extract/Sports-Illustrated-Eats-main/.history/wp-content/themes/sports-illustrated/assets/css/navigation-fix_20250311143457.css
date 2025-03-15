@@ -1,0 +1,113 @@
+/* Navigation fixes for smaller screens */
+
+/* Base navigation styles */
+.navigation-bar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.desktop-menu.left-menu {
+    flex: 0 1 auto !important;
+    order: 1 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+}
+
+.site-logo {
+    flex: 0 0 auto !important;
+    order: 2 !important;
+    text-align: center !important;
+}
+
+.desktop-menu.right-menu {
+    flex: 0 1 auto !important;
+    order: 3 !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+}
+
+.desktop-menu a {
+    display: inline-block !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    min-width: fit-content !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .navigation-bar {
+        padding: 10px 30px !important;
+    }
+    
+    .desktop-menu.left-menu,
+    .desktop-menu.right-menu {
+        gap: 15px !important;
+    }
+    
+    .desktop-menu a {
+        font-size: 16px !important;
+        padding: 6px 10px !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .navigation-bar {
+        padding: 8px 15px !important;
+    }
+    
+    .desktop-menu.left-menu,
+    .desktop-menu.right-menu {
+        gap: 10px !important;
+    }
+    
+    .desktop-menu a {
+        font-size: 14px !important;
+        padding: 5px 8px !important;
+    }
+    
+    .custom-logo {
+        max-height: 60px !important;
+    }
+}
+
+@media (max-width: 1100px) {
+    .navigation-bar {
+        padding: 6px 10px !important;
+    }
+    
+    .desktop-menu.left-menu,
+    .desktop-menu.right-menu {
+        gap: 6px !important;
+    }
+    
+    .desktop-menu a {
+        font-size: 13px !important;
+        padding: 4px 6px !important;
+        letter-spacing: -0.3px !important;
+    }
+    
+    .custom-logo {
+        max-height: 50px !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .desktop-menu.left-menu,
+    .desktop-menu.right-menu {
+        gap: 4px !important;
+    }
+    
+    .desktop-menu a {
+        font-size: 12px !important;
+        padding: 3px 4px !important;
+        letter-spacing: -0.5px !important;
+    }
+    
+    .custom-logo {
+        max-height: 45px !important;
+    }
+} 

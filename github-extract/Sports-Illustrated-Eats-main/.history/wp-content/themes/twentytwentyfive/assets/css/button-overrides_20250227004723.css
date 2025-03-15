@@ -1,0 +1,66 @@
+/* Font Face Declaration */
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('../fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('../fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Button Override Styles */
+:root {
+    --si-button-font: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    --si-button-size: 20px;
+    --si-button-spacing: 2px;
+}
+
+/* Global button reset */
+.wp-element-button,
+.wp-block-button__link,
+.wp-block-button .wp-block-button__link,
+.wp-site-blocks .wp-element-button,
+.navigation-bar .wp-element-button,
+.menu-items .wp-element-button {
+    all: unset;
+    display: inline-block;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    padding: 9px 30px !important;
+    min-width: 150px !important;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif !important;
+    font-size: var(--si-button-size) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    letter-spacing: var(--si-button-spacing) !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    border-radius: 100px !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Button hover state */
+.wp-element-button:hover,
+.wp-block-button__link:hover,
+.wp-block-button .wp-block-button__link:hover,
+.wp-site-blocks .wp-element-button:hover,
+.navigation-bar .wp-element-button:hover,
+.menu-items .wp-element-button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #FFFFFF !important;
+}
+
+/* Remove any WordPress added styles */
+.wp-element-button:where(:not(.has-background)),
+.wp-block-button__link:where(:not(.has-background)) {
+    all: unset;
+    display: inline-block;
+    background: transparent !important;
+    background-color: transparent !important;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif !important;
+} 

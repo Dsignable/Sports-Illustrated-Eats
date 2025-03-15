@@ -1,0 +1,70 @@
+/**
+ * Customizer Control Styles
+ */
+
+/* Ensure URL fields are visible */
+#customize-control-si_menu_dropdown_url_full,
+#customize-control-si_menu_dropdown_url_drink,
+#customize-control-si_menu_dropdown_url_brunch,
+#customize-control-si_menu_dropdown_url_happy,
+#customize-control-si_menu_dropdown_url_today {
+    display: block !important;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Add spacing between menu items */
+#customize-control-si_menu_dropdown_text_full,
+#customize-control-si_menu_dropdown_text_drink,
+#customize-control-si_menu_dropdown_text_brunch,
+#customize-control-si_menu_dropdown_text_happy,
+#customize-control-si_menu_dropdown_text_today {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* Make the heading more visible */
+#customize-control-si_menu_dropdown_heading {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-weight: bold;
+}
+
+/* Improve spacing for all controls */
+.customize-control {
+    margin-bottom: 12px;
+}
+
+/* Make URL fields more noticeable */
+.customize-control-url input {
+    border-color: #8c8f94;
+}
+
+/* Add visual separation between menu items */
+#customize-control-si_left_menu_has_dropdown_1,
+#customize-control-si_left_menu_has_dropdown_2,
+#customize-control-si_left_menu_has_dropdown_3,
+#customize-control-si_right_menu_has_dropdown_1,
+#customize-control-si_right_menu_has_dropdown_2,
+#customize-control-si_right_menu_has_dropdown_3 {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style the menu dropdown section */
+#customize-control-si_menu_dropdown_heading .customize-control-title {
+    font-size: 14px;
+    color: #1e1e1e;
+    background: #f0f0f1;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+/* Add visual cues for URL fields */
+.customize-control-url label {
+    color: #2271b1;
+} 

@@ -1,0 +1,25 @@
+/* Menu Styles */
+.image-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: none !important;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.menu-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    background: transparent !important;
+} 

@@ -1,0 +1,99 @@
+/* Extra Small Screens Specific Styles */
+
+/* Extra Small Laptop Styles */
+@media (max-width: 991px) and (min-width: 768px) {
+    /* Header Styles */
+    .navigation-bar {
+        padding: 10px 10px;
+        gap: 8px;
+    }
+
+    .desktop-menu {
+        gap: 8px;
+    }
+
+    .desktop-menu a {
+        font-size: 13px;
+        padding: 5px 6px;
+    }
+
+    .custom-logo {
+        max-height: 60px;
+    }
+    
+    /* Menu Button Styles */
+    .menu-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    .menu-buttons {
+        gap: 8px;
+    }
+    
+    /* Menu Page Styles */
+    .menu-page .menu-buttons {
+        gap: 8px;
+    }
+    
+    .menu-page .menu-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    /* Menu Button Styles */
+    .menu-button {
+        min-width: 140px;
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}
+
+/* Very Small Screens */
+@media (max-width: 767px) and (min-width: 481px) {
+    /* Header Styles */
+    .navigation-bar {
+        padding: 8px 8px;
+        gap: 5px;
+    }
+
+    .desktop-menu {
+        gap: 5px;
+    }
+
+    .desktop-menu a {
+        font-size: 12px;
+        padding: 4px 5px;
+    }
+
+    .custom-logo {
+        max-height: 55px;
+    }
+    
+    /* Menu Button Styles */
+    .menu-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .menu-buttons {
+        gap: 5px;
+    }
+    
+    /* Menu Page Styles */
+    .menu-page .menu-buttons {
+        gap: 5px;
+    }
+    
+    .menu-page .menu-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    /* Menu Button Styles */
+    .menu-button {
+        min-width: 120px;
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+} 

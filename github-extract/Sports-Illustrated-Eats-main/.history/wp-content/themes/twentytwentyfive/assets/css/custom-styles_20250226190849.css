@@ -1,0 +1,112 @@
+@font-face {
+    font-family: 'Solano Gothic MVB';
+    src: url('../../fonts/SolanoGothicMVB.woff2') format('woff2'),
+         url('../../fonts/SolanoGothicMVB.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 832px;
+    overflow: hidden;
+    font-family: 'Solano Gothic MVB', -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+.hero-section .wp-block-cover {
+    margin: 0;
+    padding: 0;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.navigation-bar {
+    position: relative;
+    display: flex;
+    min-height: 117px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 50px;
+    align-items: center;
+    gap: 33px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+.nav-button {
+    margin: auto 0;
+}
+
+.nav-button .wp-block-button__link {
+    min-height: 40px;
+    width: 150px;
+    padding: 9px 53px;
+    border-radius: 100px;
+    background: transparent !important;
+    border: none;
+    color: inherit !important;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.nav-button:nth-child(2) .wp-block-button__link { padding: 9px 34px; }
+.nav-button:nth-child(3) .wp-block-button__link { padding: 9px 19px 9px 18px; }
+.nav-button:nth-child(5) .wp-block-button__link {
+    padding: 9px 12px 9px 13px;
+    border-radius: 150px;
+}
+.nav-button:nth-child(6) .wp-block-button__link { padding: 9px 4px; }
+.nav-button:nth-child(7) .wp-block-button__link { padding: 9px 29px 9px 28px; }
+
+.nav-logo {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 80px;
+    align-self: stretch;
+    margin: auto 0;
+    flex-shrink: 0;
+}
+
+.wp-block-site-logo.nav-logo img {
+    width: 80px;
+    height: auto;
+}
+
+@media (max-width: 991px) {
+    .navigation-bar {
+        padding: 0 20px;
+    }
+
+    .nav-button .wp-block-button__link {
+        padding: 9px 20px;
+        white-space: initial;
+    }
+
+    .nav-button:nth-child(2) .wp-block-button__link,
+    .nav-button:nth-child(7) .wp-block-button__link {
+        padding: 9px 20px;
+    }
+} 
