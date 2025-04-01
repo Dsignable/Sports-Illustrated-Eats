@@ -103,7 +103,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .written-menu-header {
         text-align: center;
         margin-bottom: 30px;
-        border-bottom: 2px solid #444; /* Darker border for contrast */
+        border-bottom: 2px solid #555; /* Darker border for contrast */
         padding-bottom: 20px;
     }
     
@@ -130,7 +130,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         margin-bottom: 15px;
         text-transform: uppercase;
         font-weight: 600;
-        border-bottom: 1px solid #444; /* Darker border for contrast */
+        border-bottom: 1px solid #555; /* Darker border for contrast */
         padding-bottom: 10px;
         color: #e63946; /* Keep the accent color for section titles */
     }
@@ -156,7 +156,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     }
     
     .menu-item:hover {
-        background-color: #222; /* Slightly lighter black for hover state */
+        background-color: #444; /* Slightly lighter grey for hover state */
     }
     
     .item-header {
@@ -164,7 +164,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 8px;
-        border-bottom: 1px dashed #444; /* Darker border for contrast */
+        border-bottom: 1px dashed #555; /* Darker border for contrast */
         padding-bottom: 8px;
     }
     

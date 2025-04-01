@@ -311,14 +311,6 @@ function si_scripts() {
         SI_VERSION
     );
     
-    // Additional menu styles
-    wp_enqueue_style(
-        'sports-illustrated-menu-styles',
-        get_theme_file_uri('/assets/css/menu-styles.css'),
-        array('sports-illustrated-menu'),
-        SI_VERSION
-    );
-    
     // Enqueue mobile menu styles
     wp_enqueue_style('si-mobile-menu', get_template_directory_uri() . '/assets/css/mobile-menu.css', array(), '1.0.0');
 }
@@ -3275,76 +3267,25 @@ if (class_exists('WP_Customize_Control')) {
     }
 }
 
-/**
- * Add Menu Carousel customizer settings
- */
-function si_menu_carousel_customizer($wp_customize) {
-    // Add Menu Carousel Section
-    $wp_customize->add_section('si_menu_carousel_section', array(
-        'title'    => __('Menu Carousel Settings', 'sports-illustrated'),
-        'description' => __('Configure the carousel that appears above the menu buttons.', 'sports-illustrated'),
-        'priority' => 29,
+function si_menu_gallery_customizer($wp_customize) {
+    // Add section for Menu Gallery Settings
+    $wp_customize->add_section('si_menu_gallery_section', array(
+        'title'    => __('Menus Gallery Settings', 'sports-illustrated'),
+        'priority' => 30,
+        'panel'    => 'si_menu_panel',
     ));
-    
-    // Enable Menu Carousel
-    $wp_customize->add_setting('si_enable_menu_carousel', array(
-        'default'           => true,
-        'sanitize_callback' => 'rest_sanitize_boolean',
-    ));
-    
-    $wp_customize->add_control('si_enable_menu_carousel', array(
-        'label'    => __('Enable Menu Carousel', 'sports-illustrated'),
-        'description' => __('Show a carousel above the menu buttons.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'checkbox',
-    ));
-    
-    // Carousel Speed
-    $wp_customize->add_setting('si_menu_carousel_speed', array(
-        'default'           => 5000,
-        'sanitize_callback' => 'absint',
-    ));
-    
-    $wp_customize->add_control('si_menu_carousel_speed', array(
-        'label'    => __('Carousel Speed (ms)', 'sports-illustrated'),
-        'description' => __('Time between slides in milliseconds (1000ms = 1 second).', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'number',
-        'input_attrs' => array(
-            'min' => 1000,
-            'max' => 10000,
-            'step' => 500,
-        ),
-    ));
-    
-    // Carousel Height
-    $wp_customize->add_setting('si_menu_carousel_height', array(
-        'default'           => 500,
-        'sanitize_callback' => 'absint',
-    ));
-    
-    $wp_customize->add_control('si_menu_carousel_height', array(
-        'label'    => __('Carousel Height (px)', 'sports-illustrated'),
-        'description' => __('Height of the carousel in pixels.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'number',
-        'input_attrs' => array(
-            'min' => 200,
-            'max' => 800,
-            'step' => 50,
-        ),
-    ));
-    
-    // Carousel Images - Gallery Control
-    $wp_customize->add_setting('si_menu_carousel_images', array(
-        'default'           => '',
+
+    // Add setting for gallery images
+    $wp_customize->add_setting('si_menu_gallery_images', array(
+        'default'           => array(),
         'sanitize_callback' => 'si_sanitize_gallery_images',
     ));
-    
-    $wp_customize->add_control(new SI_Gallery_Control($wp_customize, 'si_menu_carousel_images', array(
-        'label'    => __('Carousel Images', 'sports-illustrated'),
-        'description' => __('Select images for the menu carousel. Recommended size: 1920×400 pixels.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
+
+    // Add control for gallery images
+    $wp_customize->add_control(new SI_Gallery_Control($wp_customize, 'si_menu_gallery_images', array(
+        'label'    => __('Menu Gallery Images', 'sports-illustrated'),
+        'section'  => 'si_menu_gallery_section',
+        'settings' => 'si_menu_gallery_images',
     )));
 }
-add_action('customize_register', 'si_menu_carousel_customizer');
+add_action('customize_register', 'si_menu_gallery_customizer');

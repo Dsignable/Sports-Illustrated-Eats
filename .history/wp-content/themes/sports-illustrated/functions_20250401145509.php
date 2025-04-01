@@ -3319,7 +3319,7 @@ function si_menu_carousel_customizer($wp_customize) {
     
     // Carousel Height
     $wp_customize->add_setting('si_menu_carousel_height', array(
-        'default'           => 500,
+        'default'           => 400,
         'sanitize_callback' => 'absint',
     ));
     

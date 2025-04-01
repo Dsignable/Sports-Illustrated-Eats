@@ -311,14 +311,6 @@ function si_scripts() {
         SI_VERSION
     );
     
-    // Additional menu styles
-    wp_enqueue_style(
-        'sports-illustrated-menu-styles',
-        get_theme_file_uri('/assets/css/menu-styles.css'),
-        array('sports-illustrated-menu'),
-        SI_VERSION
-    );
-    
     // Enqueue mobile menu styles
     wp_enqueue_style('si-mobile-menu', get_template_directory_uri() . '/assets/css/mobile-menu.css', array(), '1.0.0');
 }
@@ -3276,75 +3268,307 @@ if (class_exists('WP_Customize_Control')) {
 }
 
 /**
- * Add Menu Carousel customizer settings
+ * Add Menu Gallery settings to the Customizer
+ *
+ * @param WP_Customize_Manager $wp_customize Theme Customizer object.
  */
-function si_menu_carousel_customizer($wp_customize) {
-    // Add Menu Carousel Section
-    $wp_customize->add_section('si_menu_carousel_section', array(
-        'title'    => __('Menu Carousel Settings', 'sports-illustrated'),
-        'description' => __('Configure the carousel that appears above the menu buttons.', 'sports-illustrated'),
-        'priority' => 29,
+function si_menu_gallery_customizer($wp_customize) {
+    // Add Menu Gallery section
+    $wp_customize->add_section('si_menu_gallery_section', array(
+        'title'    => __('Menus Gallery Settings', 'sports-illustrated'),
+        'priority' => 160,
     ));
-    
-    // Enable Menu Carousel
-    $wp_customize->add_setting('si_enable_menu_carousel', array(
+
+    // Add setting for enabling/disabling the gallery
+    $wp_customize->add_setting('si_menu_gallery_enabled', array(
         'default'           => true,
         'sanitize_callback' => 'rest_sanitize_boolean',
     ));
-    
-    $wp_customize->add_control('si_enable_menu_carousel', array(
-        'label'    => __('Enable Menu Carousel', 'sports-illustrated'),
-        'description' => __('Show a carousel above the menu buttons.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
+
+    $wp_customize->add_control('si_menu_gallery_enabled', array(
+        'label'    => __('Enable Menu Gallery', 'sports-illustrated'),
+        'section'  => 'si_menu_gallery_section',
         'type'     => 'checkbox',
     ));
-    
-    // Carousel Speed
-    $wp_customize->add_setting('si_menu_carousel_speed', array(
+
+    // Gallery speed setting
+    $wp_customize->add_setting('si_menu_gallery_speed', array(
         'default'           => 5000,
         'sanitize_callback' => 'absint',
     ));
-    
-    $wp_customize->add_control('si_menu_carousel_speed', array(
-        'label'    => __('Carousel Speed (ms)', 'sports-illustrated'),
-        'description' => __('Time between slides in milliseconds (1000ms = 1 second).', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
+
+    $wp_customize->add_control('si_menu_gallery_speed', array(
+        'label'    => __('Rotation Speed (ms)', 'sports-illustrated'),
+        'section'  => 'si_menu_gallery_section',
         'type'     => 'number',
         'input_attrs' => array(
-            'min' => 1000,
-            'max' => 10000,
+            'min'  => 1000,
+            'max'  => 10000,
             'step' => 500,
         ),
     ));
-    
-    // Carousel Height
-    $wp_customize->add_setting('si_menu_carousel_height', array(
-        'default'           => 500,
-        'sanitize_callback' => 'absint',
-    ));
-    
-    $wp_customize->add_control('si_menu_carousel_height', array(
-        'label'    => __('Carousel Height (px)', 'sports-illustrated'),
-        'description' => __('Height of the carousel in pixels.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'number',
-        'input_attrs' => array(
-            'min' => 200,
-            'max' => 800,
-            'step' => 50,
-        ),
-    ));
-    
-    // Carousel Images - Gallery Control
-    $wp_customize->add_setting('si_menu_carousel_images', array(
+
+    // Gallery Images
+    $wp_customize->add_setting('si_menu_gallery_images', array(
         'default'           => '',
         'sanitize_callback' => 'si_sanitize_gallery_images',
     ));
-    
-    $wp_customize->add_control(new SI_Gallery_Control($wp_customize, 'si_menu_carousel_images', array(
-        'label'    => __('Carousel Images', 'sports-illustrated'),
-        'description' => __('Select images for the menu carousel. Recommended size: 1920×400 pixels.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
+
+    $wp_customize->add_control(new SI_Gallery_Control($wp_customize, 'si_menu_gallery_images', array(
+        'label'     => __('Gallery Images', 'sports-illustrated'),
+        'section'   => 'si_menu_gallery_section',
     )));
+
+    // Add Gallery Height Setting
+    $wp_customize->add_setting('si_menu_gallery_height', array(
+        'default'           => 300,
+        'sanitize_callback' => 'absint',
+    ));
+
+    $wp_customize->add_control('si_menu_gallery_height', array(
+        'label'    => __('Gallery Height (px)', 'sports-illustrated'),
+        'section'  => 'si_menu_gallery_section',
+        'type'     => 'number',
+        'input_attrs' => array(
+            'min'  => 100,
+            'max'  => 800,
+            'step' => 10,
+        ),
+    ));
 }
-add_action('customize_register', 'si_menu_carousel_customizer');
+add_action('customize_register', 'si_menu_gallery_customizer');
+
+/**
+ * Sanitize gallery images setting
+ * 
+ * @param mixed $value The value to sanitize
+ * @return string Sanitized value
+ */
+function si_sanitize_gallery_images($value) {
+    if (empty($value)) {
+        return '';
+    }
+    
+    $attachments = explode(',', $value);
+    $valid_attachments = array();
+    
+    foreach ($attachments as $attachment_id) {
+        if (wp_attachment_is_image($attachment_id)) {
+            $valid_attachments[] = $attachment_id;
+        }
+    }
+    
+    return implode(',', $valid_attachments);
+}
+
+/**
+ * Gallery Control Class for handling multiple images
+ */
+class SI_Gallery_Control extends WP_Customize_Control {
+    public $type = 'gallery';
+    
+    public function render_content() {
+        ?>
+        <label>
+            <?php if (!empty($this->label)) : ?>
+                <span class="customize-control-title"><?php echo esc_html($this->label); ?></span>
+            <?php endif; ?>
+            
+            <?php if (!empty($this->description)) : ?>
+                <span class="description customize-control-description"><?php echo esc_html($this->description); ?></span>
+            <?php endif; ?>
+            
+            <div class="gallery-images-container">
+                <input type="hidden" <?php $this->link(); ?> value="<?php echo esc_attr($this->value()); ?>" class="gallery-images-input" />
+                <div class="gallery-images-preview">
+                    <?php 
+                    if (!empty($this->value())) :
+                        $image_ids = explode(',', $this->value());
+                        foreach ($image_ids as $image_id) :
+                            $image = wp_get_attachment_image_src($image_id, 'thumbnail');
+                            if ($image) :
+                    ?>
+                            <div class="gallery-image-preview" data-id="<?php echo esc_attr($image_id); ?>">
+                                <img src="<?php echo esc_url($image[0]); ?>" />
+                                <a href="#" class="remove-image">×</a>
+                            </div>
+                    <?php 
+                            endif;
+                        endforeach;
+                    endif;
+                    ?>
+                </div>
+                <button type="button" class="button upload-gallery-images"><?php _e('Add/Edit Images', 'sports-illustrated'); ?></button>
+            </div>
+        </label>
+        
+        <script>
+        jQuery(document).ready(function($) {
+            // Initialize gallery control
+            var frame,
+                $control = $('#customize-control-<?php echo esc_attr($this->id); ?>'),
+                $input = $control.find('.gallery-images-input'),
+                $preview = $control.find('.gallery-images-preview');
+                
+            // Handle click on the "Add/Edit Images" button
+            $control.on('click', '.upload-gallery-images', function(e) {
+                e.preventDefault();
+                
+                // If frame exists, open it
+                if (frame) {
+                    frame.open();
+                    return;
+                }
+                
+                // Create media frame for gallery
+                frame = wp.media({
+                    title: '<?php esc_attr_e('Select or Upload Images for Gallery', 'sports-illustrated'); ?>',
+                    library: {
+                        type: 'image'
+                    },
+                    button: {
+                        text: '<?php esc_attr_e('Use these images', 'sports-illustrated'); ?>'
+                    },
+                    multiple: 'add'
+                });
+                
+                // When images are selected
+                frame.on('select', function() {
+                    var selection = frame.state().get('selection'),
+                        imageIds = [];
+                    
+                    // Get the selected image IDs
+                    selection.map(function(attachment) {
+                        attachment = attachment.toJSON();
+                        imageIds.push(attachment.id);
+                    });
+                    
+                    // Store the IDs in the input
+                    $input.val(imageIds.join(',')).trigger('change');
+                    
+                    // Update the preview
+                    updatePreview(imageIds);
+                });
+                
+                // When opened, preselect images
+                frame.on('open', function() {
+                    var selection = frame.state().get('selection'),
+                        ids = $input.val();
+                
+                    if (ids) {
+                        var idsArray = ids.split(',');
+                        idsArray.forEach(function(id) {
+                            var attachment = wp.media.attachment(id);
+                            attachment.fetch();
+                            selection.add(attachment ? [attachment] : []);
+                        });
+                    }
+                });
+                
+                // Open the media frame
+                frame.open();
+            });
+            
+            // Function to update the preview
+            function updatePreview(ids) {
+                $preview.empty();
+                
+                if (!ids || !ids.length) {
+                    return;
+                }
+                
+                if (typeof ids === 'string') {
+                    ids = ids.split(',');
+                }
+                
+                ids.forEach(function(id) {
+                    // Create image preview
+                    var attachment = wp.media.attachment(id);
+                    
+                    // Fetch the attachment
+                    attachment.fetch({
+                        success: function() {
+                            var thumbnail = attachment.get('sizes').thumbnail || attachment.get('sizes').full;
+                            
+                            if (thumbnail) {
+                                var $imgContainer = $('<div class="gallery-image-preview" data-id="' + id + '"></div>'),
+                                    $img = $('<img src="' + thumbnail.url + '" />'),
+                                    $remove = $('<a href="#" class="remove-image">×</a>');
+                                
+                                $imgContainer.append($img, $remove);
+                                $preview.append($imgContainer);
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Handle removal of images
+            $preview.on('click', '.remove-image', function(e) {
+                e.preventDefault();
+                
+                var $imgContainer = $(this).parent(),
+                    removeId = $imgContainer.data('id'),
+                    ids = $input.val(),
+                    idsArray = ids.split(','),
+                    index = idsArray.indexOf(removeId.toString());
+                
+                // Remove from array
+                if (index !== -1) {
+                    idsArray.splice(index, 1);
+                }
+                
+                // Update input value
+                $input.val(idsArray.join(',')).trigger('change');
+                
+                // Remove from preview
+                $imgContainer.remove();
+            });
+            
+            // Initialize preview
+            if ($input.val()) {
+                updatePreview($input.val());
+            }
+        });
+        </script>
+        
+        <style>
+        #customize-control-<?php echo esc_attr($this->id); ?> .gallery-images-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        #customize-control-<?php echo esc_attr($this->id); ?> .gallery-image-preview {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        #customize-control-<?php echo esc_attr($this->id); ?> .gallery-image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #customize-control-<?php echo esc_attr($this->id); ?> .remove-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 18px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        #customize-control-<?php echo esc_attr($this->id); ?> .remove-image:hover {
+            background: #dc3232;
+        }
+        </style>
+        <?php
+    }
+}

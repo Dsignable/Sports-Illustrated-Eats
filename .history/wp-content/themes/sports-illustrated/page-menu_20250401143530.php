@@ -36,13 +36,18 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     $use_page_id = true;
 }
 
+// Check if gallery should be displayed
+$show_gallery = get_theme_mod('si_menu_gallery_enabled', true);
+$gallery_images = get_theme_mod('si_menu_gallery_images', '');
+$gallery_height = get_theme_mod('si_menu_gallery_height', 400);
+$gallery_speed = get_theme_mod('si_menu_gallery_speed', 5000);
+
 // Add custom CSS for menu size
 ?>
 <style>
     .image-section {
         overflow-x: auto;
         max-width: 100%;
-        background-color: #000;
     }
     
     .image-wrapper {
@@ -51,7 +56,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background-color: #000;
     }
     
     /* Written Menu Styles */
@@ -59,17 +63,24 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         max-width: 100%;
         margin: 0 auto;
         padding: 20px;
-        background-color: #000;
     }
     
     .written-menu-container {
-        background-color: #000; /* Black background */
-        color: #fff; /* White text for better contrast */
+        background-color: #000 !important; /* Black background */
+        color: #fff;
         border-radius: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
         margin-bottom: 40px;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
         position: relative;
+        box-sizing: border-box;
+    }
+    
+    /* Gallery styles */
+    .menu-gallery {
+        height: <?php echo esc_attr($gallery_height); ?>px;
     }
     
     .menu-pdf-download {
@@ -103,7 +114,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .written-menu-header {
         text-align: center;
         margin-bottom: 30px;
-        border-bottom: 2px solid #444; /* Darker border for contrast */
+        border-bottom: 2px solid #555; /* Darker border for contrast */
         padding-bottom: 20px;
     }
     
@@ -130,7 +141,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         margin-bottom: 15px;
         text-transform: uppercase;
         font-weight: 600;
-        border-bottom: 1px solid #444; /* Darker border for contrast */
+        border-bottom: 1px solid #555; /* Darker border for contrast */
         padding-bottom: 10px;
         color: #e63946; /* Keep the accent color for section titles */
     }
@@ -156,7 +167,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     }
     
     .menu-item:hover {
-        background-color: #222; /* Slightly lighter black for hover state */
+        background-color: #444; /* Slightly lighter grey for hover state */
     }
     
     .item-header {
@@ -164,7 +175,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 8px;
-        border-bottom: 1px dashed #444; /* Darker border for contrast */
+        border-bottom: 1px dashed #555; /* Darker border for contrast */
         padding-bottom: 8px;
     }
     
@@ -289,36 +300,34 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     ?>
 </style>
 
-<div class="menu-page" style="<?php echo esc_attr($bg_style); ?>">
-    <?php
-    // Add menu carousel if enabled
-    $enable_carousel = get_theme_mod('si_enable_menu_carousel', true);
-    if ($enable_carousel) {
-        $carousel_images = get_theme_mod('si_menu_carousel_images', '');
-        $carousel_height = get_theme_mod('si_menu_carousel_height', 500);
-        $carousel_speed = get_theme_mod('si_menu_carousel_speed', 5000);
-        
-        if (!empty($carousel_images)) {
-            $image_ids = explode(',', $carousel_images);
-            if (!empty($image_ids)) {
-                echo '<div class="menu-carousel-container" data-speed="' . esc_attr($carousel_speed) . '" data-height="' . esc_attr($carousel_height) . '">';
-                echo '<div class="menu-carousel">';
-                
-                foreach ($image_ids as $image_id) {
+<main id="primary" class="site-main menu-page" <?php echo $bg_style; ?>>
+    <?php if ($show_gallery && !empty($gallery_images)) : 
+        $image_ids = explode(',', $gallery_images);
+        if (!empty($image_ids)) : ?>
+        <div class="menu-gallery" data-speed="<?php echo esc_attr($gallery_speed); ?>">
+            <div class="menu-gallery-container">
+                <?php foreach ($image_ids as $image_id) : 
                     $image_url = wp_get_attachment_image_url($image_id, 'full');
-                    if ($image_url) {
-                        echo '<div class="menu-carousel-slide" style="background-image: url(' . esc_url($image_url) . ');"></div>';
-                    }
-                }
-                
-                echo '</div>'; // End .menu-carousel
-                echo '</div>'; // End .menu-carousel-container
-            }
-        }
-    }
-    ?>
+                    if ($image_url) : ?>
+                    <div class="menu-gallery-slide">
+                        <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr(get_post_meta($image_id, '_wp_attachment_image_alt', true)); ?>">
+                    </div>
+                    <?php endif; 
+                endforeach; ?>
+            </div>
+            
+            <?php if (count($image_ids) > 1) : ?>
+            <div class="menu-gallery-dots">
+                <?php foreach ($image_ids as $index => $image_id) : ?>
+                <div class="menu-gallery-dot <?php echo $index === 0 ? 'active' : ''; ?>"></div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; 
+    endif; ?>
     
-    <div class="menu-container">
+    <nav class="menu-container">
         <div class="menu-buttons">
             <?php
             // Generate menu button URLs
@@ -520,8 +529,8 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                 </div>
             </section>
         <?php endif; ?>
-    </div>
-</div>
+    </nav>
+</main>
 
 <?php
 // Enqueue dashicons for PDF icon

@@ -36,13 +36,18 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     $use_page_id = true;
 }
 
+// Check if menu gallery is enabled
+$gallery_enabled = get_theme_mod('si_menu_gallery_enabled', true);
+$gallery_images = get_theme_mod('si_menu_gallery_images', '');
+$gallery_speed = get_theme_mod('si_menu_gallery_speed', 5000);
+$gallery_height = get_theme_mod('si_menu_gallery_height', 300);
+
 // Add custom CSS for menu size
 ?>
 <style>
     .image-section {
         overflow-x: auto;
         max-width: 100%;
-        background-color: #000;
     }
     
     .image-wrapper {
@@ -51,32 +56,61 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background-color: #000;
+    }
+    
+    /* Menu Gallery Styles */
+    .menu-gallery {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        height: <?php echo esc_attr($gallery_height); ?>px;
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
+    
+    .menu-gallery-container {
+        display: flex;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
+    
+    .menu-gallery-slide {
+        min-width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }
     
     /* Written Menu Styles */
     .menu-content-section {
-        max-width: 100%;
-        margin: 0 auto;
+        width: 100%;
         padding: 20px;
-        background-color: #000;
     }
     
     .written-menu-container {
-        background-color: #000; /* Black background */
+        background-color: #000000; /* Change to black background */
         color: #fff; /* White text for better contrast */
-        border-radius: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
         margin-bottom: 40px;
         position: relative;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
     }
     
     .menu-pdf-download {
         text-align: center;
         margin-top: 30px;
         padding-top: 20px;
-        border-top: 1px solid #555; /* Darker border for contrast */
+        border-top: 1px solid #333; /* Darker border for contrast */
     }
     
     .download-btn {
@@ -103,7 +137,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .written-menu-header {
         text-align: center;
         margin-bottom: 30px;
-        border-bottom: 2px solid #444; /* Darker border for contrast */
+        border-bottom: 2px solid #333; /* Darker border for contrast */
         padding-bottom: 20px;
     }
     
@@ -130,7 +164,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         margin-bottom: 15px;
         text-transform: uppercase;
         font-weight: 600;
-        border-bottom: 1px solid #444; /* Darker border for contrast */
+        border-bottom: 1px solid #333; /* Darker border for contrast */
         padding-bottom: 10px;
         color: #e63946; /* Keep the accent color for section titles */
     }
@@ -156,7 +190,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     }
     
     .menu-item:hover {
-        background-color: #222; /* Slightly lighter black for hover state */
+        background-color: #1a1a1a; /* Slightly lighter black for hover state */
     }
     
     .item-header {
@@ -164,7 +198,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 8px;
-        border-bottom: 1px dashed #444; /* Darker border for contrast */
+        border-bottom: 1px dashed #333; /* Darker border for contrast */
         padding-bottom: 8px;
     }
     
@@ -193,7 +227,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         color: #aaa; /* Lighter grey for tertiary text */
         font-style: italic;
         display: inline-block;
-        background-color: #444; /* Slightly lighter grey for notes background */
+        background-color: #1a1a1a; /* Slightly lighter black for notes background */
         padding: 2px 6px;
         border-radius: 3px;
         margin-top: 5px;
@@ -289,36 +323,27 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     ?>
 </style>
 
-<div class="menu-page" style="<?php echo esc_attr($bg_style); ?>">
-    <?php
-    // Add menu carousel if enabled
-    $enable_carousel = get_theme_mod('si_enable_menu_carousel', true);
-    if ($enable_carousel) {
-        $carousel_images = get_theme_mod('si_menu_carousel_images', '');
-        $carousel_height = get_theme_mod('si_menu_carousel_height', 500);
-        $carousel_speed = get_theme_mod('si_menu_carousel_speed', 5000);
-        
-        if (!empty($carousel_images)) {
-            $image_ids = explode(',', $carousel_images);
-            if (!empty($image_ids)) {
-                echo '<div class="menu-carousel-container" data-speed="' . esc_attr($carousel_speed) . '" data-height="' . esc_attr($carousel_height) . '">';
-                echo '<div class="menu-carousel">';
-                
-                foreach ($image_ids as $image_id) {
-                    $image_url = wp_get_attachment_image_url($image_id, 'full');
-                    if ($image_url) {
-                        echo '<div class="menu-carousel-slide" style="background-image: url(' . esc_url($image_url) . ');"></div>';
-                    }
-                }
-                
-                echo '</div>'; // End .menu-carousel
-                echo '</div>'; // End .menu-carousel-container
-            }
-        }
-    }
-    ?>
-    
-    <div class="menu-container">
+<main id="primary" class="site-main menu-page" <?php echo $bg_style; ?>>
+    <?php if ($gallery_enabled && !empty($gallery_images)) : ?>
+    <!-- Menu Gallery -->
+    <div class="menu-gallery">
+        <div class="menu-gallery-container">
+            <?php
+            $gallery_image_ids = explode(',', $gallery_images);
+            foreach ($gallery_image_ids as $image_id) :
+                $image_url = wp_get_attachment_image_url($image_id, 'full');
+                if ($image_url) :
+            ?>
+                <div class="menu-gallery-slide" style="background-image: url('<?php echo esc_url($image_url); ?>')"></div>
+            <?php
+                endif;
+            endforeach;
+            ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <nav class="menu-container">
         <div class="menu-buttons">
             <?php
             // Generate menu button URLs
@@ -520,21 +545,44 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                 </div>
             </section>
         <?php endif; ?>
-    </div>
-</div>
+    </nav>
+</main>
 
 <?php
+// Add the Javascript for the gallery slider
+if ($gallery_enabled && !empty($gallery_images)) :
+?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryContainer = document.querySelector('.menu-gallery-container');
+    const slides = document.querySelectorAll('.menu-gallery-slide');
+    
+    if (galleryContainer && slides.length > 1) {
+        let currentSlide = 0;
+        const slideCount = slides.length;
+        
+        // Set the width of the container
+        galleryContainer.style.width = (slideCount * 100) + '%';
+        
+        // Function to move to the next slide
+        function moveToNextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            galleryContainer.style.transform = `translateX(-${currentSlide * (100 / slideCount)}%)`;
+        }
+        
+        // Auto-rotate slides
+        setInterval(moveToNextSlide, <?php echo esc_js($gallery_speed); ?>);
+    }
+});
+</script>
+<?php
+endif;
+
 // Enqueue dashicons for PDF icon
 wp_enqueue_style('dashicons');
 
 // Enqueue menu script
-wp_enqueue_script(
-    'si-menu-page',
-    get_theme_file_uri('/assets/js/menu.js'),
-    array('jquery'),
-    SI_VERSION,
-    true
-);
+wp_enqueue_script('si-menu-pages');
 
 get_footer();
 ?> 

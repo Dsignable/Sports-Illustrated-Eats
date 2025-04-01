@@ -311,14 +311,6 @@ function si_scripts() {
         SI_VERSION
     );
     
-    // Additional menu styles
-    wp_enqueue_style(
-        'sports-illustrated-menu-styles',
-        get_theme_file_uri('/assets/css/menu-styles.css'),
-        array('sports-illustrated-menu'),
-        SI_VERSION
-    );
-    
     // Enqueue mobile menu styles
     wp_enqueue_style('si-mobile-menu', get_template_directory_uri() . '/assets/css/mobile-menu.css', array(), '1.0.0');
 }
@@ -3319,7 +3311,7 @@ function si_menu_carousel_customizer($wp_customize) {
     
     // Carousel Height
     $wp_customize->add_setting('si_menu_carousel_height', array(
-        'default'           => 500,
+        'default'           => 400,
         'sanitize_callback' => 'absint',
     ));
     

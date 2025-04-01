@@ -42,7 +42,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .image-section {
         overflow-x: auto;
         max-width: 100%;
-        background-color: #000;
     }
     
     .image-wrapper {
@@ -51,32 +50,33 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background-color: #000;
     }
     
     /* Written Menu Styles */
     .menu-content-section {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #000;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
     }
     
     .written-menu-container {
-        background-color: #000; /* Black background */
-        color: #fff; /* White text for better contrast */
-        border-radius: 0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        margin-bottom: 40px;
-        position: relative;
+        background-color: #000000;
+        color: #fff;
+        padding: 60px 20px;
+        margin: 0;
+        width: 100%;
     }
     
     .menu-pdf-download {
         text-align: center;
         margin-top: 30px;
         padding-top: 20px;
-        border-top: 1px solid #555; /* Darker border for contrast */
+        border-top: 1px solid #333;
     }
     
     .download-btn {
@@ -103,8 +103,11 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .written-menu-header {
         text-align: center;
         margin-bottom: 30px;
-        border-bottom: 2px solid #444; /* Darker border for contrast */
+        border-bottom: 2px solid #333;
         padding-bottom: 20px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .written-menu-title {
@@ -122,7 +125,8 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     }
     
     .menu-section {
-        margin-bottom: 40px;
+        max-width: 1400px;
+        margin: 0 auto 40px;
     }
     
     .section-title {
@@ -130,7 +134,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         margin-bottom: 15px;
         text-transform: uppercase;
         font-weight: 600;
-        border-bottom: 1px solid #444; /* Darker border for contrast */
+        border-bottom: 1px solid #555; /* Darker border for contrast */
         padding-bottom: 10px;
         color: #e63946; /* Keep the accent color for section titles */
     }
@@ -146,17 +150,17 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
     }
     
     .menu-item {
-        margin-bottom: 20px;
-        padding: 15px;
-        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.05);
         transition: background-color 0.3s ease;
     }
     
     .menu-item:hover {
-        background-color: #222; /* Slightly lighter black for hover state */
+        background-color: rgba(255, 255, 255, 0.1);
     }
     
     .item-header {
@@ -164,7 +168,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 8px;
-        border-bottom: 1px dashed #444; /* Darker border for contrast */
+        border-bottom: 1px dashed #555; /* Darker border for contrast */
         padding-bottom: 8px;
     }
     
@@ -289,36 +293,8 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     ?>
 </style>
 
-<div class="menu-page" style="<?php echo esc_attr($bg_style); ?>">
-    <?php
-    // Add menu carousel if enabled
-    $enable_carousel = get_theme_mod('si_enable_menu_carousel', true);
-    if ($enable_carousel) {
-        $carousel_images = get_theme_mod('si_menu_carousel_images', '');
-        $carousel_height = get_theme_mod('si_menu_carousel_height', 500);
-        $carousel_speed = get_theme_mod('si_menu_carousel_speed', 5000);
-        
-        if (!empty($carousel_images)) {
-            $image_ids = explode(',', $carousel_images);
-            if (!empty($image_ids)) {
-                echo '<div class="menu-carousel-container" data-speed="' . esc_attr($carousel_speed) . '" data-height="' . esc_attr($carousel_height) . '">';
-                echo '<div class="menu-carousel">';
-                
-                foreach ($image_ids as $image_id) {
-                    $image_url = wp_get_attachment_image_url($image_id, 'full');
-                    if ($image_url) {
-                        echo '<div class="menu-carousel-slide" style="background-image: url(' . esc_url($image_url) . ');"></div>';
-                    }
-                }
-                
-                echo '</div>'; // End .menu-carousel
-                echo '</div>'; // End .menu-carousel-container
-            }
-        }
-    }
-    ?>
-    
-    <div class="menu-container">
+<main id="primary" class="site-main menu-page" <?php echo $bg_style; ?>>
+    <nav class="menu-container">
         <div class="menu-buttons">
             <?php
             // Generate menu button URLs
@@ -520,8 +496,8 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
                 </div>
             </section>
         <?php endif; ?>
-    </div>
-</div>
+    </nav>
+</main>
 
 <?php
 // Enqueue dashicons for PDF icon

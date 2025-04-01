@@ -43,28 +43,6 @@
         <div class="footer-bottom">
             <div class="footer-links">
                 <?php
-                // Debug output
-                if (current_user_can('administrator')) {
-                    echo '<!-- Footer Link Debug:';
-                    for ($i = 1; $i <= 4; $i++) {
-                        $link_visible = get_theme_mod('si_footer_link' . $i . '_visible', true);
-                        $link_text = get_theme_mod('si_footer_link' . $i . '_text', '');
-                        $link_page = get_theme_mod('si_footer_link' . $i . '_page', '');
-                        echo "\nLink $i:";
-                        echo "\n  Visible: " . var_export($link_visible, true);
-                        echo "\n  Text: " . var_export($link_text, true);
-                        echo "\n  Page: " . var_export($link_page, true);
-                        if (!empty($link_page)) {
-                            $page = get_page_by_path($link_page);
-                            echo "\n  Page exists: " . var_export(!!$page, true);
-                            if ($page) {
-                                echo "\n  Page ID: " . $page->ID;
-                            }
-                        }
-                    }
-                    echo "\n-->";
-                }
-
                 // Loop through footer links
                 for ($i = 1; $i <= 4; $i++) {
                     $link_visible = get_theme_mod('si_footer_link' . $i . '_visible', true);

@@ -311,14 +311,6 @@ function si_scripts() {
         SI_VERSION
     );
     
-    // Additional menu styles
-    wp_enqueue_style(
-        'sports-illustrated-menu-styles',
-        get_theme_file_uri('/assets/css/menu-styles.css'),
-        array('sports-illustrated-menu'),
-        SI_VERSION
-    );
-    
     // Enqueue mobile menu styles
     wp_enqueue_style('si-mobile-menu', get_template_directory_uri() . '/assets/css/mobile-menu.css', array(), '1.0.0');
 }
@@ -3125,9 +3117,17 @@ function si_sanitize_gallery_images($value) {
     if (empty($value)) {
         return '';
     }
-    $image_ids = explode(',', $value);
-    $sanitized = array_map('absint', $image_ids);
-    return implode(',', $sanitized);
+    
+    $images = explode(',', $value);
+    $sanitized_ids = array();
+    
+    foreach ($images as $image_id) {
+        if (wp_attachment_is_image($image_id)) {
+            $sanitized_ids[] = absint($image_id);
+        }
+    }
+    
+    return implode(',', $sanitized_ids);
 }
 
 /**
@@ -3276,75 +3276,77 @@ if (class_exists('WP_Customize_Control')) {
 }
 
 /**
- * Add Menu Carousel customizer settings
+ * Menu Gallery Customizer Settings
+ *
+ * @param WP_Customize_Manager $wp_customize Theme Customizer object.
  */
-function si_menu_carousel_customizer($wp_customize) {
-    // Add Menu Carousel Section
-    $wp_customize->add_section('si_menu_carousel_section', array(
-        'title'    => __('Menu Carousel Settings', 'sports-illustrated'),
-        'description' => __('Configure the carousel that appears above the menu buttons.', 'sports-illustrated'),
-        'priority' => 29,
+function si_menu_gallery_customizer($wp_customize) {
+    // Add section
+    $wp_customize->add_section('si_menu_gallery_section', array(
+        'title'    => __('Menu Gallery Settings', 'sports-illustrated'),
+        'priority' => 160,
+        'panel'    => 'si_menus_panel', // Add to existing menus panel
     ));
     
-    // Enable Menu Carousel
-    $wp_customize->add_setting('si_enable_menu_carousel', array(
+    // Gallery enabled setting
+    $wp_customize->add_setting('si_menu_gallery_enabled', array(
         'default'           => true,
         'sanitize_callback' => 'rest_sanitize_boolean',
     ));
     
-    $wp_customize->add_control('si_enable_menu_carousel', array(
-        'label'    => __('Enable Menu Carousel', 'sports-illustrated'),
-        'description' => __('Show a carousel above the menu buttons.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'checkbox',
+    $wp_customize->add_control('si_menu_gallery_enabled', array(
+        'label'       => __('Enable Menu Gallery', 'sports-illustrated'),
+        'description' => __('Show a photo gallery at the top of the menu page.', 'sports-illustrated'),
+        'section'     => 'si_menu_gallery_section',
+        'type'        => 'checkbox',
     ));
     
-    // Carousel Speed
-    $wp_customize->add_setting('si_menu_carousel_speed', array(
-        'default'           => 5000,
-        'sanitize_callback' => 'absint',
-    ));
-    
-    $wp_customize->add_control('si_menu_carousel_speed', array(
-        'label'    => __('Carousel Speed (ms)', 'sports-illustrated'),
-        'description' => __('Time between slides in milliseconds (1000ms = 1 second).', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'number',
-        'input_attrs' => array(
-            'min' => 1000,
-            'max' => 10000,
-            'step' => 500,
-        ),
-    ));
-    
-    // Carousel Height
-    $wp_customize->add_setting('si_menu_carousel_height', array(
-        'default'           => 500,
-        'sanitize_callback' => 'absint',
-    ));
-    
-    $wp_customize->add_control('si_menu_carousel_height', array(
-        'label'    => __('Carousel Height (px)', 'sports-illustrated'),
-        'description' => __('Height of the carousel in pixels.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
-        'type'     => 'number',
-        'input_attrs' => array(
-            'min' => 200,
-            'max' => 800,
-            'step' => 50,
-        ),
-    ));
-    
-    // Carousel Images - Gallery Control
-    $wp_customize->add_setting('si_menu_carousel_images', array(
+    // Gallery Images
+    $wp_customize->add_setting('si_menu_gallery_images', array(
         'default'           => '',
         'sanitize_callback' => 'si_sanitize_gallery_images',
     ));
     
-    $wp_customize->add_control(new SI_Gallery_Control($wp_customize, 'si_menu_carousel_images', array(
-        'label'    => __('Carousel Images', 'sports-illustrated'),
-        'description' => __('Select images for the menu carousel. Recommended size: 1920×400 pixels.', 'sports-illustrated'),
-        'section'  => 'si_menu_carousel_section',
+    $wp_customize->add_control(new SI_Gallery_Control($wp_customize, 'si_menu_gallery_images', array(
+        'label'       => __('Gallery Images', 'sports-illustrated'),
+        'description' => __('Add images to the menu page gallery. These will rotate automatically.', 'sports-illustrated'),
+        'section'     => 'si_menu_gallery_section',
     )));
+    
+    // Gallery speed setting
+    $wp_customize->add_setting('si_menu_gallery_speed', array(
+        'default'           => 5000,
+        'sanitize_callback' => 'absint',
+    ));
+    
+    $wp_customize->add_control('si_menu_gallery_speed', array(
+        'label'       => __('Gallery Rotation Speed', 'sports-illustrated'),
+        'description' => __('Time in milliseconds between slides (5000 = 5 seconds).', 'sports-illustrated'),
+        'section'     => 'si_menu_gallery_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 2000,
+            'max'  => 10000,
+            'step' => 500,
+        ),
+    ));
+    
+    // Gallery height setting
+    $wp_customize->add_setting('si_menu_gallery_height', array(
+        'default'           => 400,
+        'sanitize_callback' => 'absint',
+    ));
+    
+    $wp_customize->add_control('si_menu_gallery_height', array(
+        'label'       => __('Gallery Height', 'sports-illustrated'),
+        'description' => __('Height of the gallery in pixels.', 'sports-illustrated'),
+        'section'     => 'si_menu_gallery_section',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 200,
+            'max'  => 800,
+            'step' => 50,
+        ),
+    ));
 }
-add_action('customize_register', 'si_menu_carousel_customizer');
+add_action('customize_register', 'si_menu_gallery_customizer');

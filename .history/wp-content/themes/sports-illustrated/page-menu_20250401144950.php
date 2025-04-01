@@ -42,7 +42,6 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .image-section {
         overflow-x: auto;
         max-width: 100%;
-        background-color: #000;
     }
     
     .image-wrapper {
@@ -51,21 +50,19 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background-color: #000;
     }
     
     /* Written Menu Styles */
     .menu-content-section {
-        max-width: 100%;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-        background-color: #000;
     }
     
     .written-menu-container {
-        background-color: #000; /* Black background */
+        background-color: #333333; /* Dark grey background */
         color: #fff; /* White text for better contrast */
-        border-radius: 0;
+        border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         padding: 30px;
         margin-bottom: 40px;
@@ -103,7 +100,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     .written-menu-header {
         text-align: center;
         margin-bottom: 30px;
-        border-bottom: 2px solid #444; /* Darker border for contrast */
+        border-bottom: 2px solid #555; /* Darker border for contrast */
         padding-bottom: 20px;
     }
     
@@ -130,7 +127,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         margin-bottom: 15px;
         text-transform: uppercase;
         font-weight: 600;
-        border-bottom: 1px solid #444; /* Darker border for contrast */
+        border-bottom: 1px solid #555; /* Darker border for contrast */
         padding-bottom: 10px;
         color: #e63946; /* Keep the accent color for section titles */
     }
@@ -156,7 +153,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     }
     
     .menu-item:hover {
-        background-color: #222; /* Slightly lighter black for hover state */
+        background-color: #444; /* Slightly lighter grey for hover state */
     }
     
     .item-header {
@@ -164,7 +161,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 8px;
-        border-bottom: 1px dashed #444; /* Darker border for contrast */
+        border-bottom: 1px dashed #555; /* Darker border for contrast */
         padding-bottom: 8px;
     }
     
@@ -295,7 +292,7 @@ if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'sportsillustr
     $enable_carousel = get_theme_mod('si_enable_menu_carousel', true);
     if ($enable_carousel) {
         $carousel_images = get_theme_mod('si_menu_carousel_images', '');
-        $carousel_height = get_theme_mod('si_menu_carousel_height', 500);
+        $carousel_height = get_theme_mod('si_menu_carousel_height', 400);
         $carousel_speed = get_theme_mod('si_menu_carousel_speed', 5000);
         
         if (!empty($carousel_images)) {
